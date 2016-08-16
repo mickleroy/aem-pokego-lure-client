@@ -7,9 +7,9 @@
                 jcr:description="Manage Pokemon Go lure modules at store locations"
                 jcr:primaryType="nt:unstructured"
                 jcr:title="Pokemon Go Lures"
-                href="/libs/wcm/core/content/sites/components.html"
+                href="/etc/pokegolure/index.html"
                 icon="bug"
-                id="cq-sites-components"/>
+                id="cq-pokegolure"/>
         </general>
     </tools>
 </jcr:root>
