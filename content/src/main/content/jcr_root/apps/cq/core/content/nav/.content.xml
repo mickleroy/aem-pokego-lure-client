@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="nt:unstructured">
+    <tools jcr:primaryType="nt:unstructured">
+        <general jcr:primaryType="nt:unstructured">
+            <pokegolure
+                jcr:description="Manage Pokemon Go lure modules at store locations"
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Pokemon Go Lures"
+                href="/libs/wcm/core/content/sites/components.html"
+                icon="bug"
+                id="cq-sites-components"/>
+        </general>
+    </tools>
+</jcr:root>
