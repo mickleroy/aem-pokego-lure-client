@@ -1,5 +1,7 @@
 # PokeGo Lure AEM Client
 
+[![Build Status](https://travis-ci.org/mickleroy/aem-pokego-lure-client.svg?branch=master)](https://travis-ci.org/mickleroy/aem-pokego-lure-client)
+
 An AEM dashboard to manage lure modules in various locations.
 
 ## Building
