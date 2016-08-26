@@ -11,7 +11,8 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
+    <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
+    
     <title>${currentPage.title} | PokeGoLure</title>
 
     <link rel="shortcut icon" href="${favicon}"/>
