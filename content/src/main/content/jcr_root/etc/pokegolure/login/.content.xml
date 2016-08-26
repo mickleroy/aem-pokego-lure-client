@@ -6,11 +6,9 @@
         cq:lastReplicatedBy="admin"
         cq:lastReplicationAction="Activate"
         jcr:isCheckedOut="{Boolean}true"
-        jcr:lockIsDeep="{Boolean}true"
-        jcr:lockOwner="admin"
         jcr:mixinTypes="[mix:lockable,mix:versionable]"
         jcr:primaryType="cq:PageContent"
-        jcr:title="Pokemon Go Lures"
-        jcr:uuid="62e6ab12-0fbf-4a9f-b609-89bfbd79e294"
-        sling:resourceType="pokegolure/components/manage"/>
+        jcr:title="Login | Pokemon Go Lure"
+        jcr:uuid="61efc9b6-8a7f-43d9-a262-485571ce075e"
+        sling:resourceType="pokegolure/components/login"/>
 </jcr:root>
