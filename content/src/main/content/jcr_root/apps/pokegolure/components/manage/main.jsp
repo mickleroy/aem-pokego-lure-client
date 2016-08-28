@@ -4,6 +4,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib prefix="pokego" uri="http://aem.pokego.lure/pokegolure/taglib/1.0" %>
 <cq:defineObjects />
     
 <div class="foundation-layout-panel">
@@ -84,4 +85,4 @@
 </div>
     
 <cq:includeClientLib categories="apps.pokegolure.manage"/>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.25&key=API_KEY&callback=PokeGoLure.Manage.initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.25&key=${pokego:mapsApiKey(sling)}&callback=PokeGoLure.Manage.initMap" async defer></script>
