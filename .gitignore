@@ -1,2 +1,4 @@
 /bundle/target/
 /content/target/
+*.iml
+/.idea/

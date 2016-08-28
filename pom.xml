@@ -172,6 +172,12 @@
             <url>https://repo.adobe.com/nexus/content/groups/public/</url>
             <layout>default</layout>
         </repository>
+        <repository>
+            <id>jcenter</id>
+            <name>JCenter Public Repository</name>
+            <url>http://jcenter.bintray.com</url>
+            <layout>default</layout>
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
