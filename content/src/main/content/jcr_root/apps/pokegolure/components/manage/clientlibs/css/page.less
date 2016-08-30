@@ -1,5 +1,6 @@
 .pokego-manage {
-    
+    @pokego-pink: #FF50DD;
+        
     &__map {
         float: left;
         height: 500px;
@@ -25,5 +26,32 @@
     &__lures {
         float: left;
         width: 60%;
+        
+        &__item {
+            coral-quick-actions {
+                position: absolute;
+                top: 0px;
+                right: 10px;
+                
+                button {
+                    padding: 0px 0px 0px 3px;
+                }
+            }
+            
+            coral-quick-actions.is-open {
+                display: block;
+                visibility: visible;
+            }
+            
+            coral-card-content {
+                border-left: 10px solid #DDD;
+            }
+        }
+        
+        &__item.active {
+            coral-card-content {
+                border-left: 10px solid @pokego-pink;
+            }  
+        }
     }
 }

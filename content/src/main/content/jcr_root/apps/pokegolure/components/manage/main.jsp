@@ -6,6 +6,27 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@taglib prefix="pokego" uri="http://aem.pokego.lure/pokegolure/taglib/1.0" %>
 <cq:defineObjects />
+
+<script id="pokego-manage_tmpl--lure" type="application/x-type-handlebars">
+    <coral-masonry-item data-lure-id="{{id}}" style="" tabindex="0" class="pokego-manage__lures__item {{#isLureActive this}}active{{/isLureActive}} foundation-collection-item coral-Masonry-item">
+        <coral-card class="coral-Card">
+            <coral-card-asset class="coral-Card-asset">
+                <img src="/etc/pokegolure/assets/map-melbourne.png">
+            </coral-card-asset>
+            <div class="coral-Card-wrapper">
+                <coral-card-content class="coral-Card-content">
+                    <coral-card-title class="coral-Card-title">{{location}}</coral-card-title>
+                </coral-card-content>
+            </div>
+        </coral-card>
+        <coral-quick-actions class="coral-QuickActions">
+            <button class="coral-Button coral-Button--square coral-QuickActions-button pokego-manage__lures__item__delete" role="menuitem" aria-label="Delete" title="Delete" type="button" size="M" is="coral-button">
+                <coral-icon aria-label="delete" role="img" size="S" icon="delete" class="coral-Icon coral-Icon--sizeS coral-Icon--delete"></coral-icon>
+                <coral-button-label class="coral-Button-label"></coral-button-label>
+            </button>
+        </coral-quick-actions>
+    </coral-masonry-item>
+</script>
     
 <div class="foundation-layout-panel">
     <div class="foundation-layout-panel-header">
@@ -13,18 +34,18 @@
             <div class="granite-actionbar-left">
                 <div class="granite-actionbar-item">
                     <span class="granite-title" role="heading" aria-level="1">
-                        <div>User: pokegomick0066@gmail.com</div>
+                        <div>User: <span id="pokego-user-id">n/a</span></div>
                     </span>
                 </div>
                 <div class="granite-actionbar-item">
                     <span class="granite-title" role="heading" aria-level="1">
-                        <div>Remaining Lures: 6</div>
+                        <div>Remaining Lures: <span id="pokego-lures-num">n/a</span></div>
                     </span>
                 </div>
             </div>
             <div class="granite-actionbar-right">
                 <div class="granite-actionbar-item">
-                    <button class="coral-Button coral-Button--primary">Sign Out</button>
+                    <button id="pokego-signout" class="coral-Button coral-Button--primary">Sign Out</button>
                 </div>
             </div>
         </div>
@@ -40,43 +61,7 @@
                     </div>
                 </div>
                 <div class="pokego-manage__lures">
-                    <coral-masonry style="height: 509px;" class="foundation-advancedselect-collection aria-skiphandling foundation-collection foundation-layout-masonry coral-Masonry is-loaded" data-foundation-selections-mode="single" layout="fixed-spread" columnwidth="242" spacing="10" data-foundation-layout="{&quot;name&quot;:&quot;foundation-layout-masonry&quot;,&quot;selectionMode&quot;:true,&quot;limit&quot;:null,&quot;layoutId&quot;:&quot;field&quot;,&quot;autoDefaultMode&quot;:false}">
-                        <coral-masonry-item style="" tabindex="0" class="foundation-collection-item coral-Masonry-item">
-                            <coral-card class="coral-Card">
-                                <coral-card-asset class="coral-Card-asset">
-                                    <img src="/etc/pokegolure/assets/map-melbourne.png">
-                                </coral-card-asset>
-                                <div class="coral-Card-wrapper">
-                                    <coral-card-content class="coral-Card-content">
-                                        <coral-card-title class="coral-Card-title">Flagstaff Gardens</coral-card-title>
-                                    </coral-card-content>
-                                </div>
-                            </coral-card>
-                        </coral-masonry-item>
-                        <coral-masonry-item style="" tabindex="-1" class="foundation-collection-item coral-Masonry-item">
-                            <coral-card class="coral-Card">
-                                <coral-card-asset class="coral-Card-asset">
-                                    <img src="/etc/pokegolure/assets/map-melbourne.png">
-                                </coral-card-asset>
-                                <div class="coral-Card-wrapper">
-                                    <coral-card-content class="coral-Card-content">
-                                        <coral-card-title class="coral-Card-title">Chadstone Shopping Center</coral-card-title>
-                                    </coral-card-content>
-                                </div>
-                            </coral-card>
-                        </coral-masonry-item>
-                        <coral-masonry-item style="" tabindex="-1" class="foundation-collection-item coral-Masonry-item">
-                            <coral-card class="coral-Card">
-                                <coral-card-asset class="coral-Card-asset">
-                                    <img src="/etc/pokegolure/assets/map-melbourne.png">
-                                </coral-card-asset>
-                                <div class="coral-Card-wrapper">
-                                    <coral-card-content class="coral-Card-content">
-                                        <coral-card-title class="coral-Card-title">Harbour Town, Docklands</coral-card-title>
-                                    </coral-card-content>
-                                </div>
-                            </coral-card>
-                        </coral-masonry-item>
+                    <coral-masonry id="pokego-lures-list" style="height: 509px;" class="foundation-advancedselect-collection aria-skiphandling foundation-collection foundation-layout-masonry coral-Masonry is-loaded" data-foundation-selections-mode="single" layout="fixed-spread" columnwidth="242" spacing="10" data-foundation-layout="{&quot;name&quot;:&quot;foundation-layout-masonry&quot;,&quot;selectionMode&quot;:true,&quot;limit&quot;:null,&quot;layoutId&quot;:&quot;field&quot;,&quot;autoDefaultMode&quot;:false}">
                     </coral-masonry>
                 </div>
             </div>
