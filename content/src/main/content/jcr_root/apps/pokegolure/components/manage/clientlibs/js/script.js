@@ -12,7 +12,8 @@ PokeGoLure.Manage = (function ($) {
         DEFAULT_LONG      = 144.9658801;
     
     var SERVLET_URLS = {
-        ADD: '/bin/pokego/add-pokestop'
+        ADD: '/bin/pokego/add-pokestop',
+        REMOVE: '/bin/pokego/remove-pokestop'
     }
     
     /**
@@ -52,17 +53,6 @@ PokeGoLure.Manage = (function ($) {
     
     function _fetchAllLures() {
         // TODO: servlet call to grab all configured lures
-        
-        _addLure({
-            id: 123,
-            location: "Test Lure 1, Melbourne",
-            status: "active"
-         });
-        _addLure({
-            id: 456,
-            location: "Test Lure 2, Brisbane",
-            status: "inactive"
-         });
     }
     
     /**
@@ -108,11 +98,16 @@ PokeGoLure.Manage = (function ($) {
      */
     function _handleLureDeleteClick(evt) {
         var lureId = $(this).closest('.pokego-manage__lures__item').data('lure-id');
+        var that = this;
         
-        // TODO: make servlet call to delete lure from JCR
-        
-        // remove lure from list
-        $(this).closest('.pokego-manage__lures__item').remove();
+        // delete lure from JCR
+        $.post(SERVLET_URLS.REMOVE, {id: lureId}, function(data) {
+            // remove lure to list
+            $(that).closest('.pokego-manage__lures__item').remove();
+        })
+        .fail(function() {
+            console.error('[ERROR] Could not save lure to JCR');
+        });
     }
     
     /**

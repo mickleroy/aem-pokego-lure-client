@@ -61,6 +61,24 @@ public class PokeStopServiceImpl implements PokeStopService {
 
     @Override
     public void removePokeStop(ResourceResolver resolver, String id) throws PokeStopManageException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Resource resource = resolver.getResource(Constants.POKESTOP_PATH);
+        
+        if(resource != null) {
+            try {
+                for(Resource child : resource.getChildren()) {
+                    PokeStop pokeStop = child.adaptTo(PokeStop.class);
+                    if(pokeStop != null && pokeStop.getId().equals(id)) {
+                        resolver.delete(child);
+                        resolver.commit();
+                    }
+                }
+            } catch (PersistenceException | UnsupportedOperationException ex) {
+                throw new PokeStopManageException("Could not remove node from JCR", ex);
+            } finally {
+                resolver.close();
+            }
+        } else {
+            throw new PokeStopManageException("Could not find resource at path " + Constants.POKESTOP_PATH);
+        }
     }
 }
