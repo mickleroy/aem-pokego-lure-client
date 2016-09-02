@@ -110,11 +110,11 @@
                 <configuration>
                     <group>my-packages</group>
                     <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
+                    <embeddedTarget>/apps/pokegolure/install</embeddedTarget>
                     <embeddeds>
                         <embedded>
                             <groupId>com.github.mickleroy.pokegolure</groupId>
                             <artifactId>pokegolure-client-bundle</artifactId>
-                            <target>/apps/pokegolure/install</target>
                         </embedded>
                     </embeddeds>
 

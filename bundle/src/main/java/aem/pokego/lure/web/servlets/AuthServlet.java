@@ -1,4 +1,4 @@
-package aem.pokego.lure.servlets;
+package aem.pokego.lure.web.servlets;
 
 import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.api.SlingHttpServletRequest;

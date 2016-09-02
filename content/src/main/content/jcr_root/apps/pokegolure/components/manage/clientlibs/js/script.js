@@ -11,6 +11,10 @@ PokeGoLure.Manage = (function ($) {
         DEFAULT_LAT       = -37.8150085,
         DEFAULT_LONG      = 144.9658801;
     
+    var SERVLET_URLS = {
+        ADD: '/bin/pokego/add-pokestop'
+    }
+    
     /**
      * This function initialises the component.
      */
@@ -66,10 +70,14 @@ PokeGoLure.Manage = (function ($) {
      * into the JCR as well as update the UI.
      */
     function _addLure(lure) {
-        // TODO: make servlet call to persist lure to JCR
-        
-        // add lure to list
-        $luresList.append(lureItemTemplate(lure));
+        // persist lure to JCR
+        $.post(SERVLET_URLS.ADD, lure, function(data) {
+            // add lure to list
+            $luresList.append(lureItemTemplate(lure));
+        })
+        .fail(function() {
+            console.error('[ERROR] Could not save lure to JCR');
+        });
     }
     
     /**
@@ -137,6 +145,7 @@ PokeGoLure.Manage = (function ($) {
     _populateSampleData();
 
     return {
-        initMap: _initMap
+        initMap: _initMap,
+        addLure: _addLure
     }
 })(jQuery);

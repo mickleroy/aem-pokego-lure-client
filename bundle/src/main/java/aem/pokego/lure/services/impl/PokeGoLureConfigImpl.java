@@ -21,7 +21,7 @@ import org.apache.sling.commons.osgi.PropertiesUtil;
         enabled = true, 
         immediate = true,
         metatype = true,
-        label = "Pokemon Go Lure Configuration"
+        label = "Pokemon Go Lure - Configuration"
 )
 public class PokeGoLureConfigImpl implements PokeGoLureConfig {
     
