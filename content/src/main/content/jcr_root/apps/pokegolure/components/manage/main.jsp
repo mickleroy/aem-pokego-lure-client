@@ -27,6 +27,12 @@
         </coral-quick-actions>
     </coral-masonry-item>
 </script>
+
+<script id="pokego-pokestop_tmpl" type="application/x-type-handlebars">
+    <div id="content">
+            <h1>{{description}}</h1>
+    </div>
+</script>
     
 <div class="foundation-layout-panel">
     <div class="foundation-layout-panel-header">
@@ -70,4 +76,4 @@
 </div>
     
 <cq:includeClientLib categories="apps.pokegolure.manage"/>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.25&key=${pokego:mapsApiKey(sling)}&callback=PokeGoLure.Manage.initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.25&key=${pokego:mapsApiKey(sling)}&callback=PokeGoLure.Manage.initMap&libraries=places" async defer></script>

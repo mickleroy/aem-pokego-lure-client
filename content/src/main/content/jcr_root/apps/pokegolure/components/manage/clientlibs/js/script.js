@@ -4,6 +4,10 @@ PokeGoLure.Manage = (function ($) {
     
     var map,
         lureItemTemplate,
+        infowindowTemplate,
+        autocomplete,
+        infowindow,
+        markers           = {},
         $luresList        = $('#pokego-lures-list'),
         $lureNumber       = $('#pokego-lures-num'),
         $userId           = $('#pokego-user-id'),
@@ -22,6 +26,7 @@ PokeGoLure.Manage = (function ($) {
     function _init() {
         // compile Handlebars templates
         lureItemTemplate = Handlebars.compile($('#pokego-manage_tmpl--lure').html());
+        infowindowTemplate = Handlebars.compile($('#pokego-pokestop_tmpl').html());
         
         // register handlebars helper
         Handlebars.registerHelper('isLureActive', function(item, opts) {
@@ -46,9 +51,15 @@ PokeGoLure.Manage = (function ($) {
             clickableIcons: false,
             disableDefaultUI: true
         });
-        
+
+        // once map has finished loading, create autocomplete and infowindow
+        autocomplete = new google.maps.places.Autocomplete(document.getElementsByName('location')[0]);
+        autocomplete.bindTo('bounds', map);
+        autocomplete.addListener('place_changed', _handleAutoComplete);
+        infowindow = new google.maps.InfoWindow({content: ""});
+
         // once map has finished loading, show all lures
-        google.maps.events.addListenerOnce('idle', _fetchAllLures);
+        google.maps.event.addListenerOnce('idle', _fetchAllLures);
     }
     
     function _fetchAllLures() {
@@ -108,6 +119,112 @@ PokeGoLure.Manage = (function ($) {
         .fail(function() {
             console.error('[ERROR] Could not save lure to JCR');
         });
+    }
+
+    /**
+     * This function is called when the google maps "place_changed" listener is called.
+     */
+    function _handleAutoComplete() {
+        var place = autocomplete.getPlace();
+        if (place && place.geometry) {
+            map.setCenter(place.geometry.location);
+            map.setZoom(18);
+            _populateNearbyPokestops(place)
+        }
+    }
+
+    /**
+     * This function is used to add pokestops to the new location the user has selected
+     */
+    function _populateNearbyPokestops(place) {
+        if(place.geometry.location){
+            var pokestops = _getPokestopsInArea(place.geometry.location.lat(), place.geometry.location.lng());
+            _addPokestopMarkers(pokestops);
+        }
+    }
+
+    /**
+     * This function is used to create and add _new_ pokestops as markers to the google maps.
+     */
+    function _addPokestopMarkers(pokestops){
+        if(pokestops){
+            // add new markers
+            pokestops.forEach(function(pokestop){
+                // add if new
+                if(!markers[pokestop.id]) {
+
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: {
+                            lat: pokestop.lat,
+                            lng: pokestop.lng
+                        },
+                        pokestop: pokestop
+                    });
+
+                    marker.addListener('click', _markerListener);
+                    markers[pokestop.id] = marker;
+
+                }
+            })
+        }
+    }
+
+    /**
+     * This function populates the content of the info windows with a pokestops info when a marker is clicked
+     */
+    function _markerListener(){
+        infowindow.setContent(infowindowTemplate(this.pokestop));
+        infowindow.open(map, this);
+    }
+
+    /**
+     * This function uses a lat and lng position to query the pokemon go api for pokestops in that area
+     */
+    function _getPokestopsInArea(lat, lng) {
+
+        // do some api call here
+
+        var results = [
+            {
+                "lat" : _tempGenerateRandomCoord(lat, lng).lat,
+                "lng": _tempGenerateRandomCoord(lat, lng).lng,
+                "description": "Place 1",
+                "id": "123",
+                "imgUrl": "http://"
+            },
+            {
+                "lat" : _tempGenerateRandomCoord(lat, lng).lat,
+                "lng": _tempGenerateRandomCoord(lat, lng).lng,
+                "description": "Place 2",
+                "id": "456",
+                "imgUrl": "http://"
+            }
+        ];
+
+        return results;
+    }
+
+    /**
+     * This function generates random coord data for testing purposes - this can be safely deleted when
+     * _getPokestopsInArea() is properly implemented
+     */
+    function _tempGenerateRandomCoord(lat, lng){
+        var r = 100/111300 // = 100 meters
+            , y0 = lat
+            , x0 = lng
+            , u = Math.random()
+            , v = Math.random()
+            , w = r * Math.sqrt(u)
+            , t = 2 * Math.PI * v
+            , x = w * Math.cos(t)
+            , y1 = w * Math.sin(t)
+            , x1 = x / Math.cos(y0)
+
+        return {
+            lat : y0+y1,
+            lng : x0+x1
+        };
     }
     
     /**
