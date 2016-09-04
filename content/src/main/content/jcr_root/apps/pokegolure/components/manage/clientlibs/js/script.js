@@ -13,7 +13,8 @@ PokeGoLure.Manage = (function ($) {
         $userId           = $('#pokego-user-id'),
         $signOutBtn       = $('#pokego-signout'),
         DEFAULT_LAT       = -37.8150085,
-        DEFAULT_LONG      = 144.9658801;
+        DEFAULT_LONG      = 144.9658801,
+        POKESTOP_ICON     = '/etc/pokegolure/assets/blue-marker.png';
     
     var SERVLET_URLS = {
         ADD: '/bin/pokego/add-pokestop',
@@ -71,7 +72,22 @@ PokeGoLure.Manage = (function ($) {
         $.get(SERVLET_URLS.FIND_ALL, function(data) {
             // add lures to list
             data.stops.forEach(function(pokestop){
+                // add to list
                 $luresList.append(lureItemTemplate(pokestop));
+                
+                // add marker to map
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: {
+                        lat: Number(pokestop.latitude),
+                        lng: Number(pokestop.longitude)
+                    },
+                    pokestop: pokestop,
+                    icon: POKESTOP_ICON,
+                });
+
+                marker.addListener('click', _markerListener);
+                markers[pokestop.id] = marker;
             });
         })
         .fail(function() {
@@ -88,6 +104,20 @@ PokeGoLure.Manage = (function ($) {
         $.post(SERVLET_URLS.ADD, lure, function(data) {
             // add lure to list
             $luresList.append(lureItemTemplate(lure));
+            
+            // add marker to map
+            var marker = new google.maps.Marker({
+                map: map,
+                position: {
+                    lat: Number(lure.latitude),
+                    lng: Number(lure.longitude)
+                },
+                pokestop: lure,
+                icon: POKESTOP_ICON,
+            });
+
+            marker.addListener('click', _markerListener);
+            markers[lure.id] = marker;
         })
         .fail(function() {
             console.error('[ERROR] Could not save lure to JCR');
@@ -105,6 +135,9 @@ PokeGoLure.Manage = (function ($) {
         $.post(SERVLET_URLS.REMOVE, {id: lureId}, function(data) {
             // remove lure to list
             $(that).closest('.pokego-manage__lures__item').remove();
+            
+            // remove marker from the map
+            markers[lureId].setMap(null);
         })
         .fail(function() {
             console.error('[ERROR] Could not delete lure from JCR');
@@ -252,6 +285,7 @@ PokeGoLure.Manage = (function ($) {
         _setRemainingLures(5);
         
         // PokeGoLure.Manage.addLure({id:1, latitude: '-37.8150085', longitude: '144.9658801', address: "Melbourne Central, Melbourne"});
+        // PokeGoLure.Manage.addLure({id:2, latitude: '-37.8641977', longitude: '144.964448', address: "Luna Park, St Kilda"});
     }
     
     // initialise the component
