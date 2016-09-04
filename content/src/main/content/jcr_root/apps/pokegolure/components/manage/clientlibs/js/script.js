@@ -17,7 +17,8 @@ PokeGoLure.Manage = (function ($) {
     
     var SERVLET_URLS = {
         ADD: '/bin/pokego/add-pokestop',
-        REMOVE: '/bin/pokego/remove-pokestop'
+        REMOVE: '/bin/pokego/remove-pokestop',
+        FIND_ALL: '/bin/pokego/pokestops'
     }
     
     /**
@@ -59,11 +60,23 @@ PokeGoLure.Manage = (function ($) {
         infowindow = new google.maps.InfoWindow({content: ""});
 
         // once map has finished loading, show all lures
-        google.maps.event.addListenerOnce('idle', _fetchAllLures);
+        google.maps.event.addListenerOnce(map, 'idle', _fetchAllLures);
     }
     
+    /**
+     * This function fetches all the managed lures once the map has loaded.
+     */
     function _fetchAllLures() {
-        // TODO: servlet call to grab all configured lures
+        // backend call to grab all configured lures
+        $.get(SERVLET_URLS.FIND_ALL, function(data) {
+            // add lures to list
+            data.stops.forEach(function(pokestop){
+                $luresList.append(lureItemTemplate(pokestop));
+            });
+        })
+        .fail(function() {
+            console.error('[ERROR] Could not fetch pokestops from JCR');
+        });
     }
     
     /**
@@ -78,6 +91,23 @@ PokeGoLure.Manage = (function ($) {
         })
         .fail(function() {
             console.error('[ERROR] Could not save lure to JCR');
+        });
+    }
+    
+    /**
+     * This function is responsible for removing a lure from the list of managed lures.
+     */
+    function _handleLureDeleteClick(evt) {
+        var lureId = $(this).closest('.pokego-manage__lures__item').data('lure-id');
+        var that = this;
+        
+        // delete lure from JCR
+        $.post(SERVLET_URLS.REMOVE, {id: lureId}, function(data) {
+            // remove lure to list
+            $(that).closest('.pokego-manage__lures__item').remove();
+        })
+        .fail(function() {
+            console.error('[ERROR] Could not delete lure from JCR');
         });
     }
     
@@ -102,23 +132,6 @@ PokeGoLure.Manage = (function ($) {
         // TODO delete token and redirect to login page
         
         alert("You've been signed out.");
-    }
-    
-    /**
-     * This function is responsible for removing a lure from the list of managed lures.
-     */
-    function _handleLureDeleteClick(evt) {
-        var lureId = $(this).closest('.pokego-manage__lures__item').data('lure-id');
-        var that = this;
-        
-        // delete lure from JCR
-        $.post(SERVLET_URLS.REMOVE, {id: lureId}, function(data) {
-            // remove lure to list
-            $(that).closest('.pokego-manage__lures__item').remove();
-        })
-        .fail(function() {
-            console.error('[ERROR] Could not save lure to JCR');
-        });
     }
 
     /**
@@ -238,16 +251,7 @@ PokeGoLure.Manage = (function ($) {
         _setUserId("pokegomick@gmail.com");
         _setRemainingLures(5);
         
-        _addLure({
-            id: 123,
-            location: "Test Lure 1, Melbourne",
-            status: "active"
-         });
-        _addLure({
-            id: 456,
-            location: "Test Lure 2, Brisbane",
-            status: "inactive"
-         });
+        // PokeGoLure.Manage.addLure({id:1, latitude: '-37.8150085', longitude: '144.9658801', address: "Melbourne Central, Melbourne"});
     }
     
     // initialise the component

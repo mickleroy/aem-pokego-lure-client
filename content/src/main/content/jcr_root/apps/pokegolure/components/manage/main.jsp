@@ -11,11 +11,11 @@
     <coral-masonry-item data-lure-id="{{id}}" style="" tabindex="0" class="pokego-manage__lures__item {{#isLureActive this}}active{{/isLureActive}} foundation-collection-item coral-Masonry-item">
         <coral-card class="coral-Card">
             <coral-card-asset class="coral-Card-asset">
-                <img src="/etc/pokegolure/assets/map-melbourne.png">
+                <img src="//maps.googleapis.com/maps/api/staticmap?key=${pokego:mapsApiKey(sling)}&center={{latitude}},{{longitude}}&zoom=14&size=300x175">
             </coral-card-asset>
             <div class="coral-Card-wrapper">
                 <coral-card-content class="coral-Card-content">
-                    <coral-card-title class="coral-Card-title">{{location}}</coral-card-title>
+                    <coral-card-title class="coral-Card-title">{{address}}</coral-card-title>
                 </coral-card-content>
             </div>
         </coral-card>
