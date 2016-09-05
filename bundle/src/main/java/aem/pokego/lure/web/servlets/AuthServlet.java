@@ -6,6 +6,7 @@ import com.pokegoapi.auth.GoogleAutoCredentialProvider;
 import com.pokegoapi.exceptions.LoginFailedException;
 import com.pokegoapi.exceptions.RemoteServerException;
 import okhttp3.OkHttpClient;
+import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -20,11 +21,13 @@ import java.io.IOException;
 
 import static aem.pokego.lure.util.Constants.CONTENT_TYPE_APPLICATION_JSON;
 
+@Component(immediate = true)
 @SlingServlet(
-        label       = "PokeGoLures Authentication Servlet",
-        description = "Handles authentication with the Pokemon Go API",
-        paths       = { "/bin/pokego/auth" },
-        methods     = { "POST" }
+        label               = "PokeGoLures Authentication Servlet",
+        description         = "Handles authentication with the Pokemon Go API",
+        paths               = { "/bin/pokego/auth" },
+        methods             = { "POST" },
+        generateComponent   = false
 )
 public class AuthServlet extends SlingAllMethodsServlet {
 

@@ -131,9 +131,11 @@
                     <instructions>
                         <Bundle-SymbolicName>com.github.mickleroy.pokegolure.pokegolure-client</Bundle-SymbolicName>
                         <Sling-Model-Packages>aem.pokego.lure.models</Sling-Model-Packages>
+                        <Export-Package>aem.pokego.lure.*</Export-Package>
 
                         <Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
                         <Embed-Directory>OSGI-INF/lib</Embed-Directory>
+
                         <_exportcontents>
                             com.pokegoapi.*;version=0.4.0,
                             com.annimon.stream;version=1.1.2,
@@ -147,6 +149,7 @@
                             rx.observables;version=1.1,
                             svarzee.gps.gpsoauth;version=1.0
                         </_exportcontents>
+
 
                     </instructions>
                 </configuration>

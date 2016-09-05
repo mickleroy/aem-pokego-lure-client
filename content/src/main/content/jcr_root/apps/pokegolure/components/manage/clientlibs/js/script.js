@@ -16,8 +16,8 @@ PokeGoLure.Manage = (function ($) {
         DEFAULT_LONG      = 144.9658801;
     
     var SERVLET_URLS = {
-        ADD: '/bin/pokego/add-pokestop',
-        REMOVE: '/bin/pokego/remove-pokestop'
+        ADD:    '/bin/pokego/pokestop/add',
+        REMOVE: '/bin/pokego/pokestop/remove'
     }
     
     /**
