@@ -63,7 +63,7 @@
                 <div class="pokego-manage__map">
                     <div id="gmap"></div>
                     <div class="pokego-manage__map__input coral-Form-fieldwrapper">
-                        <input aria-invalid="false" class="coral-Form-field coral-Textfield" name="location" value="" aria-required="true" data-foundation-validation="" data-validation="" is="coral-textfield" type="text" placeholder="Search for location">
+                        <input aria-invalid="false" class="coral-Form-field coral-Textfield" name="location" value="" aria-required="true" data-foundation-validation="" data-validation="" is="coral-textfield" type="text" placeholder="Search for location" disabled="">
                     </div>
                 </div>
                 <div class="pokego-manage__lures">
