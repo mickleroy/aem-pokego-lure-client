@@ -19,6 +19,10 @@
     <packaging>bundle</packaging>
     <name>PokeGo Lure AEM Client Bundle</name>
 
+    <properties>
+        <pokemon-go-api-version>0.4.0</pokemon-go-api-version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.osgi</groupId>
@@ -92,7 +96,12 @@
         <dependency>
             <groupId>com.pokegoapi</groupId>
             <artifactId>PokeGOAPI-library</artifactId>
-            <version>0.4.0</version>
+            <version>${pokemon-go-api-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
+            <version>4.1.1.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
@@ -131,6 +140,29 @@
                     <instructions>
                         <Bundle-SymbolicName>com.github.mickleroy.pokegolure.pokegolure-client</Bundle-SymbolicName>
                         <Sling-Model-Packages>aem.pokego.lure.models</Sling-Model-Packages>
+
+                        <Export-Package>
+                            aem.pokego.lure.*
+                        </Export-Package>
+                        <Private-Package>
+                            aem.pokego.lure.models.*,
+                            aem.pokego.lure.services.impl.*
+                        </Private-Package>
+
+                        <Import-Package>
+                            sun.misc.*;resolution:=optional,
+                            org.apache.avalon.framework.logger.*;resolution:=optional,
+                            org.apache.log.*;resolution:=optional,
+                            *
+                        </Import-Package>
+
+                        <Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
+                        <Embed-Directory>OSGI-INF/lib</Embed-Directory>
+                        <Embed-Transitive>true</Embed-Transitive>
+                        <_exportcontents>
+                            com.pokegoapi.*;version=${pokemon-go-api-version}
+                        </_exportcontents>
+
                     </instructions>
                 </configuration>
             </plugin>

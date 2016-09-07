@@ -12,13 +12,14 @@ PokeGoLure.Manage = (function ($) {
         $lureNumber       = $('#pokego-lures-num'),
         $userId           = $('#pokego-user-id'),
         $signOutBtn       = $('#pokego-signout'),
+        $locationInput    = $('input[name="location"]'),
         DEFAULT_LAT       = -37.8150085,
         DEFAULT_LONG      = 144.9658801,
         POKESTOP_ICON     = '/etc/pokegolure/assets/blue-marker.png';
     
     var SERVLET_URLS = {
-        ADD: '/bin/pokego/add-pokestop',
-        REMOVE: '/bin/pokego/remove-pokestop',
+        ADD: '/bin/pokego/pokestop/add',
+        REMOVE: '/bin/pokego/pokestop/remove',
         FIND_ALL: '/bin/pokego/pokestops'
     }
     
@@ -58,6 +59,7 @@ PokeGoLure.Manage = (function ($) {
         autocomplete = new google.maps.places.Autocomplete(document.getElementsByName('location')[0]);
         autocomplete.bindTo('bounds', map);
         autocomplete.addListener('place_changed', _handleAutoComplete);
+        $locationInput.removeAttr('disabled');
         infowindow = new google.maps.InfoWindow({content: ""});
 
         // once map has finished loading, show all lures
