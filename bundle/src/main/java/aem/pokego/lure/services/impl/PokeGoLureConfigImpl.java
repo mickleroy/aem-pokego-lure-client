@@ -29,14 +29,28 @@ public class PokeGoLureConfigImpl implements PokeGoLureConfig {
     private static final String PROP_MAPS_KEY = "pokegolure.maps.key";
     
     private String googleMapsApiKey;
+
+    @Property(label="Subservice Name", description="The system user name for the lure service")
+    private static final String SUBSERVICE_NAME = "pokegolure.subservice.name";
+
+    private String subserviceName;
     
     @Activate
     protected void activate(final Map<String, String> props) throws Exception {
         this.googleMapsApiKey = PropertiesUtil.toString(props.get(PROP_MAPS_KEY), "");
+        this.subserviceName = PropertiesUtil.toString(props.get(SUBSERVICE_NAME), "");
+
     }
 
     @Override
     public String getMapsApiKey() {
         return this.googleMapsApiKey;
-    } 
+    }
+
+    @Override
+    public String getSubserviceName() {
+        return this.subserviceName;
+    }
+
+
 }
