@@ -12,17 +12,15 @@ From the root directory, run ``mvn -PautoInstallPackage clean install`` to build
 
 From the bundle directory, run ``mvn -PautoInstallBundle clean install`` to build *just* the bundle and install to a CQ instance.
 
-## Using with VLT
-
-To use vlt with this project, first build and install the package to your local CQ instance as described above. Then cd to `content/src/main/content/jcr_root` and run
-
-    vlt --credentials admin:admin checkout -f ../META-INF/vault/filter.xml --force http://localhost:4502/crx
-
-Once the working copy is created, you can use the normal ``vlt up`` and ``vlt ci`` commands.
-
 ## Specifying CRX Host/Port
 
 The CRX host and port can be specified on the command line with:
 mvn -Dcrx.host=otherhost -Dcrx.port=5502 <goals>
+
+## Using the application
+
+The dashboard can be accessed at http://localhost:4502/etc/pokegolure/index.html and a shortcut is available in the Tools > General > Pokemon Go Lures. Note: A Pokemon Go account is required to use this application.
+
+![dashboard](dashboard.png)
 
 
