@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workspaceFilter version="1.0">
+    <filter root="/home/users/system/pokegolure"/>
     <filter root="/apps/cq/core/content/nav"/>
     <filter root="/etc/pokegolure"/>
     <filter root="/apps/pokegolure">

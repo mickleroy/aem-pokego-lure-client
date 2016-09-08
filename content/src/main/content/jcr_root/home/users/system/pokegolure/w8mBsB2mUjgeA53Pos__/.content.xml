@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:rep="internal"
+    jcr:primaryType="rep:SystemUser"
+    jcr:uuid="a024a387-8776-3484-80c8-9aa362dc2eb3"
+    rep:authorizableId="pokestop-service"
+    rep:principalName="pokestop-service"/>
