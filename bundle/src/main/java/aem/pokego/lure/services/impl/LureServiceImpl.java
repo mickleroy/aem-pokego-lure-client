@@ -1,10 +1,14 @@
 package aem.pokego.lure.services.impl;
 
+import POGOProtos.Inventory.Item.ItemIdOuterClass;
 import aem.pokego.lure.models.PokeStop;
 import aem.pokego.lure.services.PokeGoLureConfig;
 import aem.pokego.lure.services.PokeStopService;
+import com.pokegoapi.api.PokemonGo;
+import com.pokegoapi.api.map.fort.Pokestop;
 import org.apache.felix.scr.annotations.*;
 import aem.pokego.lure.services.LureService;
+import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.slf4j.Logger;
@@ -18,7 +22,7 @@ import java.util.Map;
  */
 @Component
 @Service(value = Runnable.class)
-@Property(name = "scheduler.expression", value = "0 0/5 * 1/1 * ?")
+@Property(name = "scheduler.period", longValue = 60)
 public class LureServiceImpl implements Runnable, LureService {
 
     private static final Logger log = LoggerFactory.getLogger(LureServiceImpl.class);
@@ -42,12 +46,12 @@ public class LureServiceImpl implements Runnable, LureService {
         ResourceResolver resourceResolver = getResourceResolver();
         if(resourceResolver != null) {
             try {
-
                 for(PokeStop pokeStop : pokeStopService.findAll(resourceResolver)){
-                    // !pokestop.activeLure()
-                    //      //pokestop.activateLure()
+                    Pokestop stop = getPokeStop(pokeStop);
+                    if(!stop.hasLure()){
+                        stop.addModifier(ItemIdOuterClass.ItemId.ITEM_TROY_DISK);
+                    }
                 }
-
             } catch(Exception e){
                 log.error("unable to add lures", e);
             }
@@ -58,17 +62,34 @@ public class LureServiceImpl implements Runnable, LureService {
         }
     }
 
+    private Pokestop getPokeStop(PokeStop pokeStop){
+        PokemonGo api = PokeGoApiServiceImpl.getInstance().getApi();
+        if(api != null) {
+            api.setLocation(pokeStop.getLatitude(), pokeStop.getLongitude(), 0);
+            try {
+                for (Pokestop stop : api.getMap().getMapObjects().getPokestops()) {
+                    if (stop.getId().equals(pokeStop.getId())) {
+                        return stop;
+                    }
+                }
+            } catch (Exception e) {
+                log.error("Unable to get pokestop", e);
+            }
+        }
+        return null;
+    }
+
     private ResourceResolver getResourceResolver(){
         Map<String, Object> param = new HashMap<>();
         param.put(ResourceResolverFactory.SUBSERVICE, pokeGoLureConfig.getSubserviceName());
         ResourceResolver resolver = null;
-//        try {
-//            resolver = resolverFactory.getServiceResourceResolver(param);
-//        } catch (LoginException e) {
-//            log.error("Unable to get CRX User LoginException", e);
-//        } catch (Exception e){
-//            log.error("Unable to get CRX User Exception", e);
-//        }
+        try {
+            resolver = resolverFactory.getResourceResolver(param);
+        } catch (LoginException e) {
+            log.error("Unable to get CRX User LoginException", e);
+        } catch (Exception e){
+            log.error("Unable to get CRX User Exception", e);
+        }
         return resolver;
     }
 
