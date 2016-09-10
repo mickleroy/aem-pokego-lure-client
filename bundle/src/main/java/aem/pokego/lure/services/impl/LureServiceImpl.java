@@ -48,7 +48,7 @@ public class LureServiceImpl implements Runnable, LureService {
             try {
                 for(PokeStop pokeStop : pokeStopService.findAll(resourceResolver)){
                     Pokestop stop = getPokeStop(pokeStop);
-                    if(!stop.hasLure()){
+                    if(stop != null && !stop.hasLure()){
                         stop.addModifier(ItemIdOuterClass.ItemId.ITEM_TROY_DISK);
                     }
                 }
