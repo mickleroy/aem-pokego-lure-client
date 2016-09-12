@@ -84,7 +84,7 @@ public class LureServiceImpl implements Runnable, LureService {
         param.put(ResourceResolverFactory.SUBSERVICE, pokeGoLureConfig.getSubserviceName());
         ResourceResolver resolver = null;
         try {
-            resolver = resolverFactory.getResourceResolver(param);
+            resolver = resolverFactory.getServiceResourceResolver(param);
         } catch (LoginException e) {
             log.error("Unable to get CRX User LoginException", e);
         } catch (Exception e){

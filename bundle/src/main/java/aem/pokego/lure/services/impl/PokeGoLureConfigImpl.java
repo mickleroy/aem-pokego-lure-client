@@ -30,7 +30,7 @@ public class PokeGoLureConfigImpl implements PokeGoLureConfig {
     
     private String googleMapsApiKey;
 
-    @Property(label="Subservice Name", description="The system user name for the lure service (default \"pokestop-service\")")
+    @Property(label="Subservice Name", description="The system user name for the lure service (default \"pokestop\")")
     private static final String SUBSERVICE_NAME = "pokegolure.subservice.name";
 
     private String subserviceName;
@@ -38,7 +38,7 @@ public class PokeGoLureConfigImpl implements PokeGoLureConfig {
     @Activate
     protected void activate(final Map<String, String> props) throws Exception {
         this.googleMapsApiKey = PropertiesUtil.toString(props.get(PROP_MAPS_KEY), "");
-        this.subserviceName = PropertiesUtil.toString(props.get(SUBSERVICE_NAME), "pokestop-service");
+        this.subserviceName = PropertiesUtil.toString(props.get(SUBSERVICE_NAME), "pokestop");
 
     }
 
