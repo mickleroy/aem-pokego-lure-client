@@ -3,7 +3,7 @@ package aem.pokego.lure.services.impl;
 import aem.pokego.lure.services.PokeGoApiService;
 import com.pokegoapi.api.PokemonGo;
 import com.pokegoapi.auth.CredentialProvider;
-import com.pokegoapi.auth.GoogleAutoCredentialProvider;
+import com.pokegoapi.auth.PtcCredentialProvider;
 import com.pokegoapi.exceptions.LoginFailedException;
 import com.pokegoapi.exceptions.RemoteServerException;
 import okhttp3.OkHttpClient;
@@ -36,7 +36,7 @@ public class PokeGoApiServiceImpl implements PokeGoApiService{
     public boolean login(String username, String password) {
         OkHttpClient http = new OkHttpClient();
         try {
-            CredentialProvider credentialProvider = new GoogleAutoCredentialProvider(http, username, password);
+            CredentialProvider credentialProvider = new PtcCredentialProvider(http, username, password);
             api = new PokemonGo(credentialProvider, http);
         } catch (LoginFailedException | RemoteServerException e) {
             return false;

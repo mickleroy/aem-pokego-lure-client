@@ -5,6 +5,7 @@ import aem.pokego.lure.models.PokeStop;
 import aem.pokego.lure.services.PokeGoLureConfig;
 import aem.pokego.lure.services.PokeStopService;
 import com.pokegoapi.api.PokemonGo;
+import com.pokegoapi.api.inventory.Item;
 import com.pokegoapi.api.map.fort.Pokestop;
 import org.apache.felix.scr.annotations.*;
 import aem.pokego.lure.services.LureService;
@@ -48,7 +49,7 @@ public class LureServiceImpl implements Runnable, LureService {
             try {
                 for(PokeStop pokeStop : pokeStopService.findAll(resourceResolver)){
                     Pokestop stop = getPokeStop(pokeStop);
-                    if(stop != null && !stop.hasLure()){
+                    if(stop != null && !stop.hasLure() && haveLures()){
                         stop.addModifier(ItemIdOuterClass.ItemId.ITEM_TROY_DISK);
                     }
                 }
@@ -77,6 +78,22 @@ public class LureServiceImpl implements Runnable, LureService {
             }
         }
         return null;
+    }
+
+    private boolean haveLures(){
+        PokemonGo api = PokeGoApiServiceImpl.getInstance().getApi();
+        if(api != null){
+            try {
+                for (Item item : api.getInventories().getItemBag().getItems()) {
+                    if (ItemIdOuterClass.ItemId.ITEM_TROY_DISK.equals(item.getItemId())) {
+                        return true;
+                    }
+                }
+            }catch(Exception e){
+                log.error("Unable to get inventory", e);
+            }
+        }
+        return false;
     }
 
     private ResourceResolver getResourceResolver(){
