@@ -14,6 +14,9 @@ import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This service provides access to the Pokemon Go Api and associated methods
+ */
 public class PokeGoApiServiceImpl implements PokeGoApiService{
 
     private static final Logger log = LoggerFactory.getLogger(PokeGoApiServiceImpl.class);
@@ -33,6 +36,12 @@ public class PokeGoApiServiceImpl implements PokeGoApiService{
         return instance;
     }
 
+    /**
+     * Attempts to login and generate a com.pokegoapi.api.PokemonGo instance using a Pokemon Trainer Club username + password
+     * @param username
+     * @param password
+     * @return the result of the login (successful/unsuccessful)
+     */
     @Override
     public boolean login(String username, String password) {
         OkHttpClient http = new OkHttpClient();
@@ -50,6 +59,11 @@ public class PokeGoApiServiceImpl implements PokeGoApiService{
         return api;
     }
 
+    /**
+     * Converts aem.pokego.lure.models.Pokestop into com.pokegoapi.api.map.fort.Pokestop
+     * @param pokeStop
+     * @return com.pokegoapi.api.map.fort.Pokestop
+     */
     @Override
     public Pokestop getPokeStop(PokeStop pokeStop){
         PokemonGo api = getApi();
@@ -68,6 +82,10 @@ public class PokeGoApiServiceImpl implements PokeGoApiService{
         return null;
     }
 
+    /**
+     * Returns the amount of lures in the logged in players inventory
+     * @return amount of lures in inventory
+     */
     @Override
     public int luresInInventory() {
         PokemonGo api = PokeGoApiServiceImpl.getInstance().getApi();

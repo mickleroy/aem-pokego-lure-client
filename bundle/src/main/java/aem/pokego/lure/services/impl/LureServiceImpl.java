@@ -4,8 +4,6 @@ import POGOProtos.Inventory.Item.ItemIdOuterClass;
 import aem.pokego.lure.models.PokeStop;
 import aem.pokego.lure.services.PokeGoLureConfig;
 import aem.pokego.lure.services.PokeStopService;
-import com.pokegoapi.api.PokemonGo;
-import com.pokegoapi.api.inventory.Item;
 import com.pokegoapi.api.map.fort.Pokestop;
 import org.apache.felix.scr.annotations.*;
 import aem.pokego.lure.services.LureService;
@@ -23,7 +21,7 @@ import java.util.Map;
  */
 @Component
 @Service(value = Runnable.class)
-@Property(name = "scheduler.period", longValue = 60)
+@Property(name = "scheduler.period", longValue = 300)
 public class LureServiceImpl implements Runnable, LureService {
 
     private static final Logger log = LoggerFactory.getLogger(LureServiceImpl.class);
@@ -43,6 +41,9 @@ public class LureServiceImpl implements Runnable, LureService {
     }
 
 
+    /**
+     * Method that iterates over all managed pokestops and adds a lure
+     */
     private void addLures(){
         ResourceResolver resourceResolver = getResourceResolver();
         if(resourceResolver != null) {
