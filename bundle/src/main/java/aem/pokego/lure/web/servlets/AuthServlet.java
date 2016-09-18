@@ -1,11 +1,6 @@
 package aem.pokego.lure.web.servlets;
 
-import com.pokegoapi.api.PokemonGo;
-import com.pokegoapi.auth.CredentialProvider;
-import com.pokegoapi.auth.GoogleAutoCredentialProvider;
-import com.pokegoapi.exceptions.LoginFailedException;
-import com.pokegoapi.exceptions.RemoteServerException;
-import okhttp3.OkHttpClient;
+import aem.pokego.lure.services.impl.PokeGoApiServiceImpl;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -17,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static aem.pokego.lure.util.Constants.CONTENT_TYPE_APPLICATION_JSON;
@@ -43,15 +39,10 @@ public class AuthServlet extends SlingAllMethodsServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        try {
+        int status = PokeGoApiServiceImpl.getInstance().login(username, password) ? HttpServletResponse.SC_ACCEPTED :
+                HttpServletResponse.SC_UNAUTHORIZED;
 
-            OkHttpClient http = new OkHttpClient();
-            CredentialProvider credentialProvider = new GoogleAutoCredentialProvider(http, username, password);
-            PokemonGo go = new PokemonGo(credentialProvider, http);
-
-        } catch (LoginFailedException|RemoteServerException e) {
-            e.printStackTrace();
-        }
+        response.setStatus(status);
 
         response.getWriter().write(json.toString());
     }
