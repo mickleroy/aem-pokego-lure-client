@@ -48,8 +48,8 @@ public class LureServiceImpl implements Runnable, LureService {
         if(resourceResolver != null) {
             try {
                 for(PokeStop pokeStop : pokeStopService.findAll(resourceResolver)){
-                    Pokestop stop = getPokeStop(pokeStop);
-                    if(stop != null && !stop.hasLure() && haveLures()){
+                    Pokestop stop = PokeGoApiServiceImpl.getInstance().getPokeStop(pokeStop);
+                    if(stop != null && !stop.hasLure() && PokeGoApiServiceImpl.getInstance().luresInInventory() > 0){
                         stop.addModifier(ItemIdOuterClass.ItemId.ITEM_TROY_DISK);
                     }
                 }
@@ -61,39 +61,6 @@ public class LureServiceImpl implements Runnable, LureService {
         if(resourceResolver != null && resourceResolver.isLive()){
             resourceResolver.close();
         }
-    }
-
-    private Pokestop getPokeStop(PokeStop pokeStop){
-        PokemonGo api = PokeGoApiServiceImpl.getInstance().getApi();
-        if(api != null) {
-            api.setLocation(pokeStop.getLatitude(), pokeStop.getLongitude(), 0);
-            try {
-                for (Pokestop stop : api.getMap().getMapObjects().getPokestops()) {
-                    if (stop.getId().equals(pokeStop.getId())) {
-                        return stop;
-                    }
-                }
-            } catch (Exception e) {
-                log.error("Unable to get pokestop", e);
-            }
-        }
-        return null;
-    }
-
-    private boolean haveLures(){
-        PokemonGo api = PokeGoApiServiceImpl.getInstance().getApi();
-        if(api != null){
-            try {
-                for (Item item : api.getInventories().getItemBag().getItems()) {
-                    if (ItemIdOuterClass.ItemId.ITEM_TROY_DISK.equals(item.getItemId())) {
-                        return true;
-                    }
-                }
-            }catch(Exception e){
-                log.error("Unable to get inventory", e);
-            }
-        }
-        return false;
     }
 
     private ResourceResolver getResourceResolver(){

@@ -1,13 +1,14 @@
 package aem.pokego.lure.services;
 
+import aem.pokego.lure.models.PokeStop;
 import com.pokegoapi.api.PokemonGo;
+import com.pokegoapi.api.map.fort.Pokestop;
 
-/**
- * Created by siebes on 10/09/2016.
- */
 public interface PokeGoApiService {
 
     boolean login(String username, String password);
     PokemonGo getApi();
+    Pokestop getPokeStop(PokeStop pokeStop);
+    int luresInInventory();
 
 }
