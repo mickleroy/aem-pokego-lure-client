@@ -22,7 +22,8 @@ PokeGoLure.Manage = (function ($) {
         REMOVE: '/bin/pokego/pokestop/remove',
         FIND_ALL: '/bin/pokego/pokestops',
         POKE_DATA: '/bin/pokego/pokedata',
-        NEARBY_POKESTOPS: '/bin/pokego/nearbypokestops'
+        NEARBY_POKESTOPS: '/bin/pokego/nearbypokestops',
+        AUTH: '/bin/pokego/auth'
     };
     
     /**
@@ -143,6 +144,19 @@ PokeGoLure.Manage = (function ($) {
         })
         .fail(function() {
             console.error('[ERROR] Could not save lure to JCR');
+        });
+    }
+
+    /**
+     * This function logins in the user.
+     */
+    function _login(username, password) {
+        // persist lure to JCR
+        $.post(SERVLET_URLS.AUTH, {username: username, password: password}, function(data) {
+            console.log("login result", data);
+        })
+        .fail(function() {
+            console.error('[ERROR] Could not login');
         });
     }
     
@@ -309,6 +323,7 @@ PokeGoLure.Manage = (function ($) {
 
     return {
         initMap: _initMap,
-        addLure: _addLure
+        addLure: _addLure,
+        login: _login
     }
 })(jQuery);
