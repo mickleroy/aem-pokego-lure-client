@@ -12,9 +12,12 @@ import com.pokegoapi.exceptions.RemoteServerException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.models.annotations.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Model(adaptables = Resource.class)
 public class PokeStop {
+    private static final Logger log = LoggerFactory.getLogger(PokeStop.class);
     
     @Inject
     private String id;
@@ -57,9 +60,8 @@ public class PokeStop {
             FortDetails fortDetails = pokestop.getDetails();
             stop.setImageUrl(fortDetails.getImageUrl().get(0));
             stop.setDescription(fortDetails.getDescription());
-
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Could not fetch pokestop details", e);
         }
         stop.setId(pokestop.getId());
         stop.setLatitude(pokestop.getLatitude());
