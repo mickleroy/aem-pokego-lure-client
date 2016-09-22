@@ -5,7 +5,10 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import com.pokegoapi.api.map.fort.FortDetails;
 import com.pokegoapi.api.map.fort.Pokestop;
+import com.pokegoapi.exceptions.LoginFailedException;
+import com.pokegoapi.exceptions.RemoteServerException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.models.annotations.Model;
@@ -21,6 +24,10 @@ public class PokeStop {
     private Double longitude;
     @Inject
     private String address;
+    @Inject
+    private String imageUrl;
+    @Inject
+    private String description;
 
     public PokeStop() {}
     
@@ -35,6 +42,7 @@ public class PokeStop {
         stop.setLatitude(Double.parseDouble(request.getParameter("latitude")));
         stop.setLongitude(Double.parseDouble(request.getParameter("longitude")));
         stop.setAddress(request.getParameter("address"));
+        stop.setDescription(request.getParameter("description"));
         return stop;
     }
 
@@ -43,8 +51,16 @@ public class PokeStop {
      * @param pokestop
      * @return
      */
-    public static PokeStop fromPokeGoApi(Pokestop pokestop){
+    public static PokeStop fromPokeGoApi(Pokestop pokestop) {
         PokeStop stop = new PokeStop();
+        try {
+            FortDetails fortDetails = pokestop.getDetails();
+            stop.setImageUrl(fortDetails.getImageUrl().get(0));
+            stop.setDescription(fortDetails.getDescription());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         stop.setId(pokestop.getId());
         stop.setLatitude(pokestop.getLatitude());
         stop.setLongitude(pokestop.getLongitude());
@@ -82,7 +98,23 @@ public class PokeStop {
     public void setAddress(String address) {
         this.address = address;
     }
-    
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     /**
      * Instance method to convert the properties of a PokeStop to a Map.
      * @return 
@@ -93,6 +125,8 @@ public class PokeStop {
         props.put("latitude", this.latitude);
         props.put("longitude", this.longitude);
         props.put("address", this.address);
+        props.put("imageUrl", this.imageUrl);
+        props.put("description", this.description);
         return props;
     }
     

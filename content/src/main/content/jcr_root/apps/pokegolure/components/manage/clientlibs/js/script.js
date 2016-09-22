@@ -1,4 +1,4 @@
-var PokeGoLure = PokeGoLure || {}
+var PokeGoLure = PokeGoLure || {};
 PokeGoLure.Manage = (function ($) {
     'use strict';
     
@@ -20,8 +20,10 @@ PokeGoLure.Manage = (function ($) {
     var SERVLET_URLS = {
         ADD: '/bin/pokego/pokestop/add',
         REMOVE: '/bin/pokego/pokestop/remove',
-        FIND_ALL: '/bin/pokego/pokestops'
-    }
+        FIND_ALL: '/bin/pokego/pokestops',
+        POKE_DATA: '/bin/pokego/pokedata',
+        NEARBY_POKESTOPS: '/bin/pokego/nearbypokestops'
+    };
     
     /**
      * This function initialises the component.
@@ -40,6 +42,10 @@ PokeGoLure.Manage = (function ($) {
         $signOutBtn.on('click', _handleSignOut);
         $luresList.on('click', '.pokego-manage__lures__item__delete', _handleLureDeleteClick);
         $luresList.on('mouseenter mouseleave', '.pokego-manage__lures__item', _handleLureMouseMovement);
+
+        _fetchPokeData();
+
+        setInterval(_fetchPokeData, 1000 * 60); // Fetch data every 60 seconds
     }
     
     /**
@@ -85,7 +91,7 @@ PokeGoLure.Manage = (function ($) {
                         lng: Number(pokestop.longitude)
                     },
                     pokestop: pokestop,
-                    icon: POKESTOP_ICON,
+                    icon: POKESTOP_ICON
                 });
 
                 marker.addListener('click', _markerListener);
@@ -96,7 +102,21 @@ PokeGoLure.Manage = (function ($) {
             console.error('[ERROR] Could not fetch pokestops from JCR');
         });
     }
-    
+
+    /**
+     * This function fetches all the managed lures once the map has loaded.
+     */
+    function _fetchPokeData() {
+        // backend call to grab all trainer name and lures left
+        $.get(SERVLET_URLS.POKE_DATA, function(data) {
+            _setUserId(data.username);
+            _setRemainingLures(data.luresLeft);
+        })
+        .fail(function() {
+            console.error('[ERROR] Could not fetch pokedata');
+        });
+    }
+
     /**
      * This function adds a new lure to be managed by the application
      * into the JCR as well as update the UI.
@@ -115,7 +135,7 @@ PokeGoLure.Manage = (function ($) {
                     lng: Number(lure.longitude)
                 },
                 pokestop: lure,
-                icon: POKESTOP_ICON,
+                icon: POKESTOP_ICON
             });
 
             marker.addListener('click', _markerListener);
@@ -186,8 +206,7 @@ PokeGoLure.Manage = (function ($) {
      */
     function _populateNearbyPokestops(place) {
         if(place.geometry.location){
-            var pokestops = _getPokestopsInArea(place.geometry.location.lat(), place.geometry.location.lng());
-            _addPokestopMarkers(pokestops);
+            _getPokestopsInArea(place.geometry.location.lat(), place.geometry.location.lng());
         }
     }
 
@@ -204,8 +223,8 @@ PokeGoLure.Manage = (function ($) {
                     var marker = new google.maps.Marker({
                         map: map,
                         position: {
-                            lat: pokestop.lat,
-                            lng: pokestop.lng
+                            lat: pokestop.latitude,
+                            lng: pokestop.longitude
                         },
                         pokestop: pokestop
                     });
@@ -229,28 +248,31 @@ PokeGoLure.Manage = (function ($) {
     /**
      * This function uses a lat and lng position to query the pokemon go api for pokestops in that area
      */
-    function _getPokestopsInArea(lat, lng) {
-
-        // do some api call here
-
+    function _getPokestopsInArea(lat, lng, callback) {
         var results = [
             {
-                "lat" : _tempGenerateRandomCoord(lat, lng).lat,
-                "lng": _tempGenerateRandomCoord(lat, lng).lng,
+                "latitude" : _tempGenerateRandomCoord(lat, lng).lat,
+                "longitude": _tempGenerateRandomCoord(lat, lng).lng,
                 "description": "Place 1",
                 "id": "123",
                 "imgUrl": "http://"
             },
             {
-                "lat" : _tempGenerateRandomCoord(lat, lng).lat,
-                "lng": _tempGenerateRandomCoord(lat, lng).lng,
+                "latitude" : _tempGenerateRandomCoord(lat, lng).lat,
+                "longitude": _tempGenerateRandomCoord(lat, lng).lng,
                 "description": "Place 2",
                 "id": "456",
                 "imgUrl": "http://"
             }
         ];
 
-        return results;
+        $.get(SERVLET_URLS.NEARBY_POKESTOPS, {latitude: lat, longitude: lng})
+            .done(function(data){
+                _addPokestopMarkers(results.concat(data.nearbyStops));
+            })
+            .fail(function() {
+                console.error('[ERROR] Could not fetch nearby poke stops');
+            });
     }
 
     /**
@@ -267,7 +289,7 @@ PokeGoLure.Manage = (function ($) {
             , t = 2 * Math.PI * v
             , x = w * Math.cos(t)
             , y1 = w * Math.sin(t)
-            , x1 = x / Math.cos(y0)
+            , x1 = x / Math.cos(y0);
 
         return {
             lat : y0+y1,
@@ -282,19 +304,19 @@ PokeGoLure.Manage = (function ($) {
         $(this).find('coral-quick-actions').toggleClass('is-open');
     }
     
-    function _populateSampleData() {
-        _setUserId("pokegomick@gmail.com");
-        _setRemainingLures(5);
+    // function _populateSampleData() {
+    //     _setUserId("pokegomick@gmail.com");
+    //     _setRemainingLures(5);
         
         // PokeGoLure.Manage.addLure({id:1, latitude: '-37.8150085', longitude: '144.9658801', address: "Melbourne Central, Melbourne"});
         // PokeGoLure.Manage.addLure({id:2, latitude: '-37.8641977', longitude: '144.964448', address: "Luna Park, St Kilda"});
-    }
+    // }
     
     // initialise the component
     _init();
     
     // TEMPORARY
-    _populateSampleData();
+    // _populateSampleData();
 
     return {
         initMap: _initMap,
