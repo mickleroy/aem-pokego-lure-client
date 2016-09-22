@@ -248,7 +248,7 @@ PokeGoLure.Manage = (function ($) {
     /**
      * This function uses a lat and lng position to query the pokemon go api for pokestops in that area
      */
-    function _getPokestopsInArea(lat, lng, callback) {
+    function _getPokestopsInArea(lat, lng) {
         var results = [
             {
                 "latitude" : _tempGenerateRandomCoord(lat, lng).lat,
@@ -303,20 +303,9 @@ PokeGoLure.Manage = (function ($) {
     function _handleLureMouseMovement() {
         $(this).find('coral-quick-actions').toggleClass('is-open');
     }
-    
-    // function _populateSampleData() {
-    //     _setUserId("pokegomick@gmail.com");
-    //     _setRemainingLures(5);
-        
-        // PokeGoLure.Manage.addLure({id:1, latitude: '-37.8150085', longitude: '144.9658801', address: "Melbourne Central, Melbourne"});
-        // PokeGoLure.Manage.addLure({id:2, latitude: '-37.8641977', longitude: '144.964448', address: "Luna Park, St Kilda"});
-    // }
-    
+
     // initialise the component
     _init();
-    
-    // TEMPORARY
-    // _populateSampleData();
 
     return {
         initMap: _initMap,
