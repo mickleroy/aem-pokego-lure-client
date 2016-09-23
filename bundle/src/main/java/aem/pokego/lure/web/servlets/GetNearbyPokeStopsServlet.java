@@ -32,7 +32,7 @@ import java.util.List;
 )
 public class GetNearbyPokeStopsServlet extends SlingSafeMethodsServlet {
 
-    private static final Logger log = LoggerFactory.getLogger(AddPokeStopServlet.class);
+    private static final Logger log = LoggerFactory.getLogger(GetNearbyPokeStopsServlet.class);
 
     @Override
     protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
