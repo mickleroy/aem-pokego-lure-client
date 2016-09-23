@@ -105,7 +105,7 @@ PokeGoLure.Manage = (function ($) {
     }
 
     /**
-     * This function fetches all the managed lures once the map has loaded.
+     * This function fetches trainer username and total of lures in the inventory.
      */
     function _fetchPokeData() {
         // backend call to grab all trainer name and lures left
