@@ -7,8 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.pokegoapi.api.map.fort.FortDetails;
 import com.pokegoapi.api.map.fort.Pokestop;
-import com.pokegoapi.exceptions.LoginFailedException;
-import com.pokegoapi.exceptions.RemoteServerException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.models.annotations.Model;
@@ -17,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 @Model(adaptables = Resource.class)
 public class PokeStop {
+    
     private static final Logger log = LoggerFactory.getLogger(PokeStop.class);
     
     @Inject

@@ -55,6 +55,7 @@ public class PokeGoApiServiceImpl implements PokeGoApiService{
             CredentialProvider credentialProvider = new PtcCredentialProvider(http, username, password);
             api = new PokemonGo(credentialProvider, http);
         } catch (LoginFailedException | RemoteServerException e) {
+            log.error("Could not login", e);
             return false;
         }
         return true;
