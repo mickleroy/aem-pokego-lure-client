@@ -43,6 +43,8 @@ PokeGoLure.Manage = (function ($) {
         $signOutBtn.on('click', _handleSignOut);
         $luresList.on('click', '.pokego-manage__lures__item__delete', _handleLureDeleteClick);
         $luresList.on('mouseenter mouseleave', '.pokego-manage__lures__item', _handleLureMouseMovement);
+        $(document).on("click", "#pokego-manage", _managePokestopClicked);
+        $(document).on("click", "#pokego-unmanage", _unmanagePokestopClicked);
 
         _fetchPokeData();
 
@@ -81,6 +83,7 @@ PokeGoLure.Manage = (function ($) {
         $.get(SERVLET_URLS.FIND_ALL, function(data) {
             // add lures to list
             data.stops.forEach(function(pokestop){
+                pokestop.managed = true;
                 // add to list
                 $luresList.append(lureItemTemplate(pokestop));
                 
@@ -119,32 +122,58 @@ PokeGoLure.Manage = (function ($) {
     }
 
     /**
-     * This function adds a new lure to be managed by the application
-     * into the JCR as well as update the UI.
+     * Click Handler for Manage Pokestop
      */
-    function _addLure(lure) {
-        // persist lure to JCR
-        $.post(SERVLET_URLS.ADD, lure, function(data) {
-            // add lure to list
-            $luresList.append(lureItemTemplate(lure));
-            
-            // add marker to map
-            var marker = new google.maps.Marker({
-                map: map,
-                position: {
-                    lat: Number(lure.latitude),
-                    lng: Number(lure.longitude)
-                },
-                pokestop: lure,
-                icon: POKESTOP_ICON
-            });
+    function _managePokestopClicked() {
+        var id = $(this).data("pokestopId");
+        var marker = markers[id];
+        if(marker){
+            _addLureViaMarker(marker);
+        }
+    }
 
-            marker.addListener('click', _markerListener);
-            markers[lure.id] = marker;
-        })
-        .fail(function() {
-            console.error('[ERROR] Could not save lure to JCR');
-        });
+    /**
+     * Click Handler for Unmanage Pokestop
+     */
+    function _unmanagePokestopClicked() {
+        var id = $(this).data("pokestopId");
+        var marker = markers[id];
+        if(marker){
+            _removeLureViaMarker(marker);
+        }
+    }
+
+    /**
+     * If Manage Pokestop is done via Google Maps Marker
+     */
+    function _addLureViaMarker(marker) {
+        // persist lure to JCR
+        $.post(SERVLET_URLS.ADD, marker.pokestop, function(data) {
+                // add lure to list
+                marker.setIcon(POKESTOP_ICON);
+                marker.pokestop.managed = true;
+                $luresList.append(lureItemTemplate(marker.pokestop));
+                infowindow.setContent(infowindowTemplate(marker.pokestop));
+            })
+            .fail(function() {
+                console.error('[ERROR] Could not save lure to JCR');
+            });
+    }
+
+    /**
+     * If Unmanage Pokestop is done via Google Maps Marker
+     */
+    function _removeLureViaMarker(marker) {
+        // delete lure from JCR
+        $.post(SERVLET_URLS.REMOVE, {id: marker.pokestop.id}, function(data) {
+                marker.setIcon(null);
+                marker.pokestop.managed = false;
+                $luresList.find("[data-lure-id='" + marker.pokestop.id + "']").remove();
+                infowindow.setContent(infowindowTemplate(marker.pokestop));
+            })
+            .fail(function() {
+                console.error('[ERROR] Could not delete lure from JCR');
+            });
     }
 
     /**
@@ -165,15 +194,17 @@ PokeGoLure.Manage = (function ($) {
      */
     function _handleLureDeleteClick(evt) {
         var lureId = $(this).closest('.pokego-manage__lures__item').data('lure-id');
-        var that = this;
         
         // delete lure from JCR
         $.post(SERVLET_URLS.REMOVE, {id: lureId}, function(data) {
-            // remove lure to list
-            $(that).closest('.pokego-manage__lures__item').remove();
-            
-            // remove marker from the map
-            markers[lureId].setMap(null);
+            // remove lure from list
+            $luresList.find("[data-lure-id='" + lureId + "']").remove();
+            var marker = markers[lureId];
+            if(marker){
+                marker.setIcon(null);
+                marker.pokestop.managed = false;
+                infowindow.close(); //just in case
+            }
         })
         .fail(function() {
             console.error('[ERROR] Could not delete lure from JCR');
@@ -263,52 +294,13 @@ PokeGoLure.Manage = (function ($) {
      * This function uses a lat and lng position to query the pokemon go api for pokestops in that area
      */
     function _getPokestopsInArea(lat, lng) {
-        var results = [
-            {
-                "latitude" : _tempGenerateRandomCoord(lat, lng).lat,
-                "longitude": _tempGenerateRandomCoord(lat, lng).lng,
-                "description": "Place 1",
-                "id": "123",
-                "imgUrl": "http://"
-            },
-            {
-                "latitude" : _tempGenerateRandomCoord(lat, lng).lat,
-                "longitude": _tempGenerateRandomCoord(lat, lng).lng,
-                "description": "Place 2",
-                "id": "456",
-                "imgUrl": "http://"
-            }
-        ];
-
         $.get(SERVLET_URLS.NEARBY_POKESTOPS, {latitude: lat, longitude: lng})
             .done(function(data){
-                _addPokestopMarkers(results.concat(data.nearbyStops));
+                _addPokestopMarkers(data.nearbyStops);
             })
             .fail(function() {
                 console.error('[ERROR] Could not fetch nearby poke stops');
             });
-    }
-
-    /**
-     * This function generates random coord data for testing purposes - this can be safely deleted when
-     * _getPokestopsInArea() is properly implemented
-     */
-    function _tempGenerateRandomCoord(lat, lng){
-        var r = 100/111300 // = 100 meters
-            , y0 = lat
-            , x0 = lng
-            , u = Math.random()
-            , v = Math.random()
-            , w = r * Math.sqrt(u)
-            , t = 2 * Math.PI * v
-            , x = w * Math.cos(t)
-            , y1 = w * Math.sin(t)
-            , x1 = x / Math.cos(y0);
-
-        return {
-            lat : y0+y1,
-            lng : x0+x1
-        };
     }
     
     /**
@@ -323,7 +315,6 @@ PokeGoLure.Manage = (function ($) {
 
     return {
         initMap: _initMap,
-        addLure: _addLure,
         login: _login
     }
 })(jQuery);

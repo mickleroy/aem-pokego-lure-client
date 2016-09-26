@@ -22,6 +22,8 @@ public class PokeStop {
     @Inject
     private String id;
     @Inject
+    private String name;
+    @Inject
     private Double latitude;
     @Inject
     private Double longitude;
@@ -42,6 +44,8 @@ public class PokeStop {
     public static PokeStop fromHttpRequest(HttpServletRequest request) {
         PokeStop stop = new PokeStop();
         stop.setId(request.getParameter("id"));
+        stop.setName(request.getParameter("name"));
+        stop.setImageUrl(request.getParameter("imageUrl"));
         stop.setLatitude(Double.parseDouble(request.getParameter("latitude")));
         stop.setLongitude(Double.parseDouble(request.getParameter("longitude")));
         stop.setAddress(request.getParameter("address"));
@@ -58,6 +62,7 @@ public class PokeStop {
         PokeStop stop = new PokeStop();
         try {
             FortDetails fortDetails = pokestop.getDetails();
+            stop.setName(fortDetails.getName());
             stop.setImageUrl(fortDetails.getImageUrl().get(0));
             stop.setDescription(fortDetails.getDescription());
         } catch (Exception e) {
@@ -117,6 +122,14 @@ public class PokeStop {
         this.description = description;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     /**
      * Instance method to convert the properties of a PokeStop to a Map.
      * @return 
@@ -124,6 +137,7 @@ public class PokeStop {
     public Map<String, Object> toProps() {
         Map<String, Object> props = new HashMap<>();
         props.put("id", this.id);
+        props.put("name", this.name);
         props.put("latitude", this.latitude);
         props.put("longitude", this.longitude);
         props.put("address", this.address);
