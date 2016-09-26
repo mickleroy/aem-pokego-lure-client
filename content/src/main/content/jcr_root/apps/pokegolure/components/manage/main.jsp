@@ -30,7 +30,12 @@
 
 <script id="pokego-pokestop_tmpl" type="application/x-type-handlebars">
     <div id="content">
-            <h1>{{description}}</h1>
+            <h1>{{name}}</h1>
+            <img class="pokego-manage__map__image" src="{{imageUrl}}"/>
+            <div>
+                <button id="pokego-unmanage" data-pokestop-id="{{id}}" class="coral-Button coral-Button--warning {{#unless managed}}hidden{{/unless}}">Unmanage Pokestop</button>
+                <button id="pokego-manage" data-pokestop-id="{{id}}" class="coral-Button coral-Button--primary {{#if managed}}hidden{{/if}}">Manage Pokestop</button>
+            </div>
     </div>
 </script>
     
