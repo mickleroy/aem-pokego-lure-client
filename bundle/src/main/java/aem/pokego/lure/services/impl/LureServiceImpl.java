@@ -6,7 +6,6 @@ import aem.pokego.lure.services.PokeGoLureConfig;
 import aem.pokego.lure.services.PokeStopService;
 import com.pokegoapi.api.map.fort.Pokestop;
 import org.apache.felix.scr.annotations.*;
-import aem.pokego.lure.services.LureService;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
@@ -22,7 +21,7 @@ import java.util.Map;
 @Component
 @Service(value = Runnable.class)
 @Property(name = "scheduler.period", longValue = 300)
-public class LureServiceImpl implements Runnable, LureService {
+public class LureServiceImpl implements Runnable {
 
     private static final Logger log = LoggerFactory.getLogger(LureServiceImpl.class);
 

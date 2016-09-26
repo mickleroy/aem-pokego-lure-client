@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 
 @Component(enabled = true, immediate = true)

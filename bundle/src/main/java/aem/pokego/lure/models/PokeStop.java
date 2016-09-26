@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.pokegoapi.api.map.fort.FortDetails;
 import com.pokegoapi.api.map.fort.Pokestop;
+import com.pokegoapi.exceptions.LoginFailedException;
+import com.pokegoapi.exceptions.RemoteServerException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.models.annotations.Model;
@@ -27,8 +29,6 @@ public class PokeStop {
     @Inject
     private Double longitude;
     @Inject
-    private String address;
-    @Inject
     private String imageUrl;
     @Inject
     private String description;
@@ -47,7 +47,6 @@ public class PokeStop {
         stop.setImageUrl(request.getParameter("imageUrl"));
         stop.setLatitude(Double.parseDouble(request.getParameter("latitude")));
         stop.setLongitude(Double.parseDouble(request.getParameter("longitude")));
-        stop.setAddress(request.getParameter("address"));
         stop.setDescription(request.getParameter("description"));
         return stop;
     }
@@ -64,7 +63,7 @@ public class PokeStop {
             stop.setName(fortDetails.getName());
             stop.setImageUrl(fortDetails.getImageUrl().get(0));
             stop.setDescription(fortDetails.getDescription());
-        } catch (Exception e) {
+        } catch (LoginFailedException | RemoteServerException e) {
             log.error("Could not fetch pokestop details", e);
         }
         stop.setId(pokestop.getId());
@@ -95,14 +94,6 @@ public class PokeStop {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getImageUrl() {
@@ -139,7 +130,6 @@ public class PokeStop {
         props.put("name", this.name);
         props.put("latitude", this.latitude);
         props.put("longitude", this.longitude);
-        props.put("address", this.address);
         props.put("imageUrl", this.imageUrl);
         props.put("description", this.description);
         return props;

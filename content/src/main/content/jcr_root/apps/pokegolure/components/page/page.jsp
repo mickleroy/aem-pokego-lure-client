@@ -45,7 +45,7 @@
             <cq:include script="main.jsp"/>
         </coral-shell-content>
     </coral-shell>
-
+    
     <cq:includeClientLib js="apps.pokegolure.page"/>
 </body>
 </html>
