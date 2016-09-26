@@ -1,5 +1,6 @@
 package aem.pokego.lure.web.servlets;
 
+import aem.pokego.lure.services.PokeGoApiService;
 import aem.pokego.lure.services.impl.PokeGoApiServiceImpl;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
@@ -33,13 +34,14 @@ public class AuthServlet extends SlingAllMethodsServlet {
     protected void doPost(@Nonnull SlingHttpServletRequest  request,
                           @Nonnull SlingHttpServletResponse response) throws ServletException, IOException {
 
+        final PokeGoApiService pokeGoApiService = PokeGoApiServiceImpl.getInstance();
         response.setContentType(CONTENT_TYPE_APPLICATION_JSON);
         JSONObject json = new JSONObject();
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        int status = PokeGoApiServiceImpl.getInstance().login(username, password) ? HttpServletResponse.SC_ACCEPTED :
+        int status = pokeGoApiService.login(username, password) ? HttpServletResponse.SC_ACCEPTED :
                 HttpServletResponse.SC_UNAUTHORIZED;
 
         response.setStatus(status);

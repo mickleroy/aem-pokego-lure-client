@@ -5,6 +5,7 @@ import aem.pokego.lure.models.PokeStop;
 import aem.pokego.lure.services.PokeGoApiService;
 import com.pokegoapi.api.PokemonGo;
 import com.pokegoapi.api.inventory.Item;
+import com.pokegoapi.api.map.fort.FortDetails;
 import com.pokegoapi.api.map.fort.Pokestop;
 import com.pokegoapi.auth.CredentialProvider;
 import com.pokegoapi.auth.PtcCredentialProvider;
@@ -13,6 +14,11 @@ import com.pokegoapi.exceptions.RemoteServerException;
 import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * This service provides access to the Pokemon Go Api and associated methods
@@ -80,6 +86,48 @@ public class PokeGoApiServiceImpl implements PokeGoApiService{
             }
         }
         return null;
+    }
+
+    /**
+     * Returns the Pokemon trainer name
+     * @return
+     */
+    @Override
+    public String getTrainerName() {
+        PokemonGo api = PokeGoApiServiceImpl.getInstance().getApi();
+
+        if(api != null) {
+            try {
+                return api.getPlayerProfile().getPlayerData().getUsername();
+            } catch(Exception e) {
+                log.error("Unable to get trainer data", e);
+            }
+        }
+        return null;
+    }
+    /**
+     * Returns the Pokemon stops
+     * @return
+     */
+    @Override
+    public List<PokeStop> getNearbyPokestops(double latitude, double longitude, double altitude) {
+        PokemonGo api = PokeGoApiServiceImpl.getInstance().getApi();
+
+        Collection<Pokestop> pokestopCollection;
+        List<PokeStop> pokeStopList = new ArrayList<>();
+        if(api != null) {
+            try {
+                api.setLocation(latitude, longitude, altitude);
+                pokestopCollection = api.getMap().getMapObjects().getPokestops();
+
+                for (Pokestop pokestop : pokestopCollection) {
+                    pokeStopList.add(PokeStop.fromPokeGoApi(pokestop));
+                }
+            } catch(Exception e) {
+                log.error("Unable to get poke stops data", e);
+            }
+        }
+        return pokeStopList;
     }
 
     /**
