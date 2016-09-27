@@ -18,4 +18,11 @@
         <function-class>aem.pokego.lure.web.functions.HelperFunction</function-class>
         <function-signature>java.lang.Boolean isLoggedIn(org.apache.sling.api.scripting.SlingScriptHelper)</function-signature>
     </function>
+
+    <function>
+        <name>getGoogleLoginUrl</name>
+        <function-class>aem.pokego.lure.web.functions.HelperFunction</function-class>
+        <function-signature>java.lang.String getGoogleLoginUrl()</function-signature>
+    </function>
+
 </taglib>

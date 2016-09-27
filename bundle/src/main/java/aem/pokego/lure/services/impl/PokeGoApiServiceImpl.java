@@ -7,6 +7,8 @@ import com.pokegoapi.api.PokemonGo;
 import com.pokegoapi.api.inventory.Item;
 import com.pokegoapi.api.map.fort.Pokestop;
 import com.pokegoapi.auth.CredentialProvider;
+import com.pokegoapi.auth.GoogleCredentialProvider;
+import com.pokegoapi.auth.GoogleUserCredentialProvider;
 import com.pokegoapi.auth.PtcCredentialProvider;
 import com.pokegoapi.exceptions.LoginFailedException;
 import com.pokegoapi.exceptions.RemoteServerException;
@@ -56,6 +58,28 @@ public class PokeGoApiServiceImpl implements PokeGoApiService{
             log.error("Could not login", e);
             return false;
         }
+        return true;
+    }
+
+    @Override
+    public boolean login(String token) {
+        OkHttpClient http = new OkHttpClient();
+
+        try {
+            GoogleUserCredentialProvider credentialProvider = new GoogleUserCredentialProvider(http);
+            credentialProvider.login(token);
+
+            api = new PokemonGo(credentialProvider, http);
+
+            String refreshToken = credentialProvider.getRefreshToken();
+
+            // TODO - store refresh token.
+
+        } catch (LoginFailedException|RemoteServerException e) {
+            log.error("Token login failed.", e);
+            return false;
+        }
+
         return true;
     }
 

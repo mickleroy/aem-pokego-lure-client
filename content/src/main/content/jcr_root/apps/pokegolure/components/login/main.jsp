@@ -4,18 +4,42 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib prefix="pokego" uri="http://aem.pokego.lure/pokegolure/taglib/1.0" %>
 <cq:defineObjects />
     
 <div class="pokego-login">
     <div class="pokego-login__container">
         <p>PokeGoLure allows you to manage PokeStops at any given location. You must have an existing Pokemon Go account setup against the Google account that will be used to manage lures.</p>
         <p>Simply login to your Google account to get started.</p>
-        <div class="pokego-login__container__btn">
-            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        <div>
+            <a class="coral-Button coral-Button--large coral-Button--primary" id="google-auth" target="_blank" href="${pokego:getGoogleLoginUrl()}">Get Authorisation Token</a>
         </div>
+        <div>
+            <form class="coral-Form coral-Form--vertical" id="google-auth--form">
+                <section class="coral-Form-fieldset">
+                    <label class="coral-Form-fieldlabel">Paste your authorisation token here</label>
+                    <input name="token" id="token" placeholder="Google Token" type="text" class="coral-Form-field coral-Textfield" />
+                    <button class="coral-Button coral-Button--primary" id="google-login">Authorise</button>
+                </section>
+            </form>
+        </div>
+        <div>
+            <p>Or login with your Pokemon Trainer Club account.</p>
+            <form class="coral-Form coral-Form--vertical">
+                <section class="coral-Form-fieldset">
+
+                    <input name="username" id="username" placeholder="Username" type="text" class="coral-Form-field coral-Textfield" />
+
+                    <input name="password" id="password" placeholder="Password" type="password" class="coral-Form-field coral-Textfield" />
+                    <button class="coral-Button coral-Button--primary" id="ptc-login">Login</button>
+                </section>
+            </form>
+        </div>
+        <div id="login-alert" class="coral-Alert coral-Alert--error"></div>
         <small>Disclaimer: This software should be used at your own risk as it may be against the Terms of Use.</small>
     </div>
 </div>
 
 <cq:includeClientLib css="apps.pokegolure.login"/>
+<cq:includeClientLib js="apps.pokegolure.login"/>
 <script src="https://apis.google.com/js/platform.js" async defer></script>

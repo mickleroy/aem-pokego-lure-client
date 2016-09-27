@@ -13,14 +13,13 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
-    
+
     <title>${currentPage.title} | PokeGoLure</title>
 
     <link rel="shortcut icon" href="${favicon}"/>
 
     <cq:includeClientLib css="apps.pokegolure.page"/>
-    
+
     <!-- redirect mechanism to make sure user is logged in-->
     <c:set var="isLoggedIn" value="${pokego:isLoggedIn(sling)}"/>
     <c:if test="${isLoggedIn && currentPage.name == 'login'}">
@@ -29,7 +28,7 @@
     <c:if test="${!isLoggedIn && currentPage.name == 'index'}">
         <meta http-equiv="refresh" content="0; url=/etc/pokegolure/login.html" />
     </c:if>
-    
+
 </head>
 <body class="coral--light">
     <coral-shell class="coral-Shell">
@@ -45,7 +44,7 @@
             <cq:include script="main.jsp"/>
         </coral-shell-content>
     </coral-shell>
-    
+
     <cq:includeClientLib js="apps.pokegolure.page"/>
 </body>
 </html>
