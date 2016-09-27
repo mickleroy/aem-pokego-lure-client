@@ -8,14 +8,14 @@
 <cq:defineObjects />
 
 <script id="pokego-manage_tmpl--lure" type="application/x-type-handlebars">
-    <coral-masonry-item data-lure-id="{{id}}" style="" tabindex="0" class="pokego-manage__lures__item {{#isLureActive this}}active{{/isLureActive}} foundation-collection-item coral-Masonry-item">
+    <coral-masonry-item data-lure-id="{{id}}" style="" tabindex="0" class="pokego-manage__lures__item active foundation-collection-item coral-Masonry-item">
         <coral-card class="coral-Card">
             <coral-card-asset class="coral-Card-asset">
                 <img src="//maps.googleapis.com/maps/api/staticmap?key=${pokego:mapsApiKey(sling)}&center={{latitude}},{{longitude}}&zoom=14&size=300x175">
             </coral-card-asset>
             <div class="coral-Card-wrapper">
                 <coral-card-content class="coral-Card-content">
-                    <coral-card-title class="coral-Card-title">{{address}}</coral-card-title>
+                    <coral-card-title class="coral-Card-title">{{name}}</coral-card-title>
                 </coral-card-content>
             </div>
         </coral-card>
@@ -30,12 +30,13 @@
 
 <script id="pokego-pokestop_tmpl" type="application/x-type-handlebars">
     <div id="content">
-            <h1>{{name}}</h1>
-            <img class="pokego-manage__map__image" src="{{imageUrl}}"/>
-            <div>
-                <button id="pokego-unmanage" data-pokestop-id="{{id}}" class="coral-Button coral-Button--warning {{#unless managed}}hidden{{/unless}}">Unmanage Pokestop</button>
-                <button id="pokego-manage" data-pokestop-id="{{id}}" class="coral-Button coral-Button--primary {{#if managed}}hidden{{/if}}">Manage Pokestop</button>
-            </div>
+        <p class="pokego-manage__map__text"><strong>{{name}}</strong></p>
+        <p class="pokego-manage__map__text">{{description}}</p>
+        <img class="pokego-manage__map__image" src="{{imageUrl}}"/>
+        <div>
+            <button id="pokego-manage" data-pokestop-id="{{id}}" class="coral-Button coral-Button" {{#if managed}}disabled{{/if}}>Add</button>
+            <button id="pokego-unmanage" data-pokestop-id="{{id}}" class="coral-Button coral-Button" {{#unless managed}}disabled{{/unless}}>Remove</button>
+        </div>
     </div>
 </script>
     
@@ -78,6 +79,10 @@
             </div>
         </div>
     </div>
+</div>
+    
+<div class="foundation-ui-mask hidden">
+    <coral-wait centered="" class="coral-Wait coral-Wait--large coral-Wait--centered"></coral-wait>
 </div>
     
 <cq:includeClientLib categories="apps.pokegolure.manage"/>

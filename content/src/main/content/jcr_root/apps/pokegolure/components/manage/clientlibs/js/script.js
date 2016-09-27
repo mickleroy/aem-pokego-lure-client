@@ -13,6 +13,7 @@ PokeGoLure.Manage = (function ($) {
         $userId           = $('#pokego-user-id'),
         $signOutBtn       = $('#pokego-signout'),
         $locationInput    = $('input[name="location"]'),
+        $loadingMask      = $('.foundation-ui-mask'),
         DEFAULT_LAT       = -37.8150085,
         DEFAULT_LONG      = 144.9658801,
         POKESTOP_ICON     = '/etc/pokegolure/assets/blue-marker.png';
@@ -61,7 +62,8 @@ PokeGoLure.Manage = (function ($) {
             scrollwheel: false,
             zoom: 8,
             clickableIcons: false,
-            disableDefaultUI: true
+            disableDefaultUI: true,
+            zoomControl: true
         });
 
         // once map has finished loading, create autocomplete and infowindow
@@ -294,12 +296,17 @@ PokeGoLure.Manage = (function ($) {
      * This function uses a lat and lng position to query the pokemon go api for pokestops in that area
      */
     function _getPokestopsInArea(lat, lng) {
+        $loadingMask.removeClass('hidden');
+        
         $.get(SERVLET_URLS.NEARBY_POKESTOPS, {latitude: lat, longitude: lng})
             .done(function(data){
                 _addPokestopMarkers(data.nearbyStops);
             })
             .fail(function() {
                 console.error('[ERROR] Could not fetch nearby poke stops');
+            })
+            .always(function() {
+                $loadingMask.addClass('hidden');
             });
     }
     

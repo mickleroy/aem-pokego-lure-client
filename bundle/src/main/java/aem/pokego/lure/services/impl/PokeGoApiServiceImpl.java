@@ -5,7 +5,6 @@ import aem.pokego.lure.models.PokeStop;
 import aem.pokego.lure.services.PokeGoApiService;
 import com.pokegoapi.api.PokemonGo;
 import com.pokegoapi.api.inventory.Item;
-import com.pokegoapi.api.map.fort.FortDetails;
 import com.pokegoapi.api.map.fort.Pokestop;
 import com.pokegoapi.auth.CredentialProvider;
 import com.pokegoapi.auth.PtcCredentialProvider;
@@ -17,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -55,6 +53,7 @@ public class PokeGoApiServiceImpl implements PokeGoApiService{
             CredentialProvider credentialProvider = new PtcCredentialProvider(http, username, password);
             api = new PokemonGo(credentialProvider, http);
         } catch (LoginFailedException | RemoteServerException e) {
+            log.error("Could not login", e);
             return false;
         }
         return true;

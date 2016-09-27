@@ -4,6 +4,8 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib prefix="pokego" uri="http://aem.pokego.lure/pokegolure/taglib/1.0" %>
+
 <cq:defineObjects />
 
 <!doctype html>
@@ -18,6 +20,16 @@
     <link rel="shortcut icon" href="${favicon}"/>
 
     <cq:includeClientLib css="apps.pokegolure.page"/>
+    
+    <!-- redirect mechanism to make sure user is logged in-->
+    <c:set var="isLoggedIn" value="${pokego:isLoggedIn(sling)}"/>
+    <c:if test="${isLoggedIn && currentPage.name == 'login'}">
+        <meta http-equiv="refresh" content="0; url=/etc/pokegolure/index.html" />
+    </c:if>
+    <c:if test="${!isLoggedIn && currentPage.name == 'index'}">
+        <meta http-equiv="refresh" content="0; url=/etc/pokegolure/login.html" />
+    </c:if>
+    
 </head>
 <body class="coral--light">
     <coral-shell class="coral-Shell">
@@ -33,7 +45,7 @@
             <cq:include script="main.jsp"/>
         </coral-shell-content>
     </coral-shell>
-
+    
     <cq:includeClientLib js="apps.pokegolure.page"/>
 </body>
 </html>

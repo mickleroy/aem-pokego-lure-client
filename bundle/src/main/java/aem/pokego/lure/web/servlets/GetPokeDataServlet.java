@@ -1,18 +1,13 @@
 
 package aem.pokego.lure.web.servlets;
 
-import aem.pokego.lure.exceptions.PokeStopManageException;
-import aem.pokego.lure.models.PokeStop;
 import aem.pokego.lure.services.PokeGoApiService;
-import aem.pokego.lure.services.PokeStopService;
 import aem.pokego.lure.services.impl.PokeGoApiServiceImpl;
 import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
-import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.slf4j.Logger;
@@ -21,12 +16,11 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 @Component(enabled = true, immediate = true)
 @SlingServlet(
         description = "Retrieves PokeData to manage",
-        label = "PokeGoLure - Get PokeStops Servlet",
+        label = "PokeGoLure - Get User Data Servlet",
         metatype = false,
         generateComponent = false,
         methods = {"GET"},

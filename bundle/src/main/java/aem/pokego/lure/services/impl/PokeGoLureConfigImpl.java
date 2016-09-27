@@ -51,6 +51,4 @@ public class PokeGoLureConfigImpl implements PokeGoLureConfig {
     public String getSubserviceName() {
         return this.subserviceName;
     }
-
-
 }

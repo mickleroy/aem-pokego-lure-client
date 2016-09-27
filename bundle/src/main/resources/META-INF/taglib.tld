@@ -13,4 +13,9 @@
         <function-class>aem.pokego.lure.web.functions.HelperFunction</function-class>
         <function-signature>java.lang.String getMapsApiKey(org.apache.sling.api.scripting.SlingScriptHelper)</function-signature>
     </function>
+    <function>
+        <name>isLoggedIn</name>
+        <function-class>aem.pokego.lure.web.functions.HelperFunction</function-class>
+        <function-signature>java.lang.Boolean isLoggedIn(org.apache.sling.api.scripting.SlingScriptHelper)</function-signature>
+    </function>
 </taglib>

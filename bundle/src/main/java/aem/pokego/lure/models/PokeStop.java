@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 @Model(adaptables = Resource.class)
 public class PokeStop {
+    
     private static final Logger log = LoggerFactory.getLogger(PokeStop.class);
     
     @Inject
@@ -27,8 +28,6 @@ public class PokeStop {
     private Double latitude;
     @Inject
     private Double longitude;
-    @Inject
-    private String address;
     @Inject
     private String imageUrl;
     @Inject
@@ -48,7 +47,6 @@ public class PokeStop {
         stop.setImageUrl(request.getParameter("imageUrl"));
         stop.setLatitude(Double.parseDouble(request.getParameter("latitude")));
         stop.setLongitude(Double.parseDouble(request.getParameter("longitude")));
-        stop.setAddress(request.getParameter("address"));
         stop.setDescription(request.getParameter("description"));
         return stop;
     }
@@ -65,7 +63,7 @@ public class PokeStop {
             stop.setName(fortDetails.getName());
             stop.setImageUrl(fortDetails.getImageUrl().get(0));
             stop.setDescription(fortDetails.getDescription());
-        } catch (Exception e) {
+        } catch (LoginFailedException | RemoteServerException e) {
             log.error("Could not fetch pokestop details", e);
         }
         stop.setId(pokestop.getId());
@@ -96,14 +94,6 @@ public class PokeStop {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getImageUrl() {
@@ -140,7 +130,6 @@ public class PokeStop {
         props.put("name", this.name);
         props.put("latitude", this.latitude);
         props.put("longitude", this.longitude);
-        props.put("address", this.address);
         props.put("imageUrl", this.imageUrl);
         props.put("description", this.description);
         return props;
