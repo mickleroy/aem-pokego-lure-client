@@ -27,6 +27,7 @@ public final class HelperFunction {
 
     /**
      * Checks whether a user is logged into the Pokemon API.
+     * It will attempt to refresh the session if the API is present.
      * @param sling
      * @return
      */

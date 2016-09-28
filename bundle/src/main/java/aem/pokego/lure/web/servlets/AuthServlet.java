@@ -31,6 +31,11 @@ public class AuthServlet extends SlingAllMethodsServlet {
 
     private Logger log = LoggerFactory.getLogger(AuthServlet.class);
 
+    private static final String POST_PARAM_TOKEN    = "token";
+    private static final String POST_PARAM_USERNAME = "username";
+    private static final String POST_PARAM_PASSWORD = "password";
+    private static final String GET_PARAM_LOGOUT    = "logout";
+
     @Override
     protected void doPost(@Nonnull SlingHttpServletRequest  request,
                           @Nonnull SlingHttpServletResponse response) throws ServletException, IOException {
@@ -38,26 +43,33 @@ public class AuthServlet extends SlingAllMethodsServlet {
         response.setContentType(CONTENT_TYPE_APPLICATION_JSON);
         JSONObject json = new JSONObject();
 
-        String token    = request.getParameter("token");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String token    = request.getParameter(POST_PARAM_TOKEN);
+        String username = request.getParameter(POST_PARAM_USERNAME);
+        String password = request.getParameter(POST_PARAM_PASSWORD);
 
         PokeGoApiService api = PokeGoApiServiceImpl.getInstance();
 
-        if (token != null) {
-            if (api.login(token)) {
-                response.setStatus(HttpServletResponse.SC_ACCEPTED);
-            } else {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            }
-        } else {
-            if (api.login(username, password)) {
-                response.setStatus(HttpServletResponse.SC_ACCEPTED);
-            } else {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            }
+        int status = HttpServletResponse.SC_UNAUTHORIZED;
+
+        /* Attempt login with token first, if available. Fallback to PTC username and password. */
+        if ((token != null && api.login(token)) || api.login(username, password)) {
+            status = HttpServletResponse.SC_ACCEPTED;
         }
 
+        response.setStatus(status);
         response.getWriter().write(json.toString());
+    }
+
+    @Override
+    protected void doGet(@Nonnull SlingHttpServletRequest  request,
+                         @Nonnull SlingHttpServletResponse response) throws ServletException, IOException {
+
+        if (request.getRequestParameterMap().containsKey(GET_PARAM_LOGOUT)) {
+            PokeGoApiServiceImpl.getInstance().logout();
+            response.setStatus(HttpServletResponse.SC_ACCEPTED);
+        } else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+
     }
 }
