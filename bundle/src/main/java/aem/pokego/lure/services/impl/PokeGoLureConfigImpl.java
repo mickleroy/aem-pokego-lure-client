@@ -37,7 +37,7 @@ public class PokeGoLureConfigImpl implements PokeGoLureConfig {
     
     @Activate
     protected void activate(final Map<String, String> props) throws Exception {
-        this.googleMapsApiKey = PropertiesUtil.toString(props.get(PROP_MAPS_KEY), "AIzaSyA6_6EMheTYHfWkQNxnlWhdrl-RdC8SmxM");
+        this.googleMapsApiKey = PropertiesUtil.toString(props.get(PROP_MAPS_KEY), "");
         this.subserviceName = PropertiesUtil.toString(props.get(SUBSERVICE_NAME), "pokestop");
 
     }
