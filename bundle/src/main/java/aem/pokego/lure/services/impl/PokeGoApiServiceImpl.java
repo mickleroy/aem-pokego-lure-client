@@ -7,6 +7,8 @@ import com.pokegoapi.api.PokemonGo;
 import com.pokegoapi.api.inventory.Item;
 import com.pokegoapi.api.map.fort.Pokestop;
 import com.pokegoapi.auth.CredentialProvider;
+import com.pokegoapi.auth.GoogleCredentialProvider;
+import com.pokegoapi.auth.GoogleUserCredentialProvider;
 import com.pokegoapi.auth.PtcCredentialProvider;
 import com.pokegoapi.exceptions.LoginFailedException;
 import com.pokegoapi.exceptions.RemoteServerException;
@@ -27,6 +29,13 @@ public class PokeGoApiServiceImpl implements PokeGoApiService{
     private static PokeGoApiService instance;
 
     private PokemonGo api;
+
+    /* Google OAuth refresh token storage. */
+    private String refreshToken;
+
+    /* PTC Credential storage. */
+    private String username;
+    private String password;
 
 
     public static PokeGoApiService getInstance() {
@@ -50,13 +59,73 @@ public class PokeGoApiServiceImpl implements PokeGoApiService{
     public boolean login(String username, String password) {
         OkHttpClient http = new OkHttpClient();
         try {
+
             CredentialProvider credentialProvider = new PtcCredentialProvider(http, username, password);
+
             api = new PokemonGo(credentialProvider, http);
+
+            this.username = username;
+            this.password = password;
+
         } catch (LoginFailedException | RemoteServerException e) {
             log.error("Could not login", e);
             return false;
         }
         return true;
+    }
+
+    @Override
+    public boolean login(String token) {
+        OkHttpClient http = new OkHttpClient();
+
+        try {
+
+            GoogleUserCredentialProvider credentialProvider = new GoogleUserCredentialProvider(http);
+            credentialProvider.login(token);
+
+            api = new PokemonGo(credentialProvider, http);
+            this.refreshToken = credentialProvider.getRefreshToken();
+
+        } catch (LoginFailedException|RemoteServerException e) {
+            log.error("Token login failed.", e);
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public void logout() {
+        this.api          = null;
+        this.refreshToken = null;
+        this.username     = null;
+        this.password     = null;
+    }
+
+    @Override
+    public boolean refreshSession() {
+        OkHttpClient http = new OkHttpClient();
+
+        if (refreshToken != null) {
+            try {
+
+                /* Reconnect to Google with stored refresh token. */
+                GoogleUserCredentialProvider credentialProvider = new GoogleUserCredentialProvider(http);
+                credentialProvider.refreshToken(refreshToken);
+                api = new PokemonGo(credentialProvider, http);
+
+            } catch (LoginFailedException|RemoteServerException e) {
+                log.error("Token refresh failed.", e);
+                return false;
+            }
+        } else if (username != null && password != null) {
+
+            /* PTC re-login as normal. */
+            return login(username, password);
+
+        }
+
+        return false;
     }
 
     @Override

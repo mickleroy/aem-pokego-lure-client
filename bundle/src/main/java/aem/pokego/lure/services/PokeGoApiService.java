@@ -8,7 +8,10 @@ import java.util.List;
 
 public interface PokeGoApiService {
 
+    boolean refreshSession();
     boolean login(String username, String password);
+    boolean login(String token);
+    void logout();
     PokemonGo getApi();
     Pokestop getPokeStop(PokeStop pokeStop);
     String getTrainerName();

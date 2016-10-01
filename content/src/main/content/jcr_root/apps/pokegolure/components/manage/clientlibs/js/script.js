@@ -16,7 +16,8 @@ PokeGoLure.Manage = (function ($) {
         $loadingMask      = $('.foundation-ui-mask'),
         DEFAULT_LAT       = -37.8150085,
         DEFAULT_LONG      = 144.9658801,
-        POKESTOP_ICON     = '/etc/pokegolure/assets/blue-marker.png';
+        POKESTOP_ICON     = '/etc/pokegolure/assets/blue-marker.png',
+        LOGOUT_REDIRECT   = '/etc/pokegolure/login.html';
     
     var SERVLET_URLS = {
         ADD: '/bin/pokego/pokestop/add',
@@ -231,9 +232,10 @@ PokeGoLure.Manage = (function ($) {
      * This function signs a user out of the application.
      */
     function _handleSignOut() {
-        // TODO delete token and redirect to login page
-        
-        alert("You've been signed out.");
+        $.get(SERVLET_URLS.AUTH + '?logout=true', function () {
+            console.log("logout success.");
+            window.location.href = LOGOUT_REDIRECT;
+        });
     }
 
     /**

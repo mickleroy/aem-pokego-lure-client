@@ -4,6 +4,8 @@ package aem.pokego.lure.web.functions;
 import aem.pokego.lure.services.PokeGoApiService;
 import aem.pokego.lure.services.PokeGoLureConfig;
 import aem.pokego.lure.services.impl.PokeGoApiServiceImpl;
+import com.pokegoapi.auth.GoogleCredentialProvider;
+import com.pokegoapi.auth.GoogleUserCredentialProvider;
 import org.apache.sling.api.scripting.SlingScriptHelper;
 
 public final class HelperFunction {
@@ -13,7 +15,7 @@ public final class HelperFunction {
     /**
      * Returns the Google Maps API key configured through the PokeGoLureConfig.
      * @param sling
-     * @return 
+     * @return
      */
     public static String getMapsApiKey(SlingScriptHelper sling) {
         PokeGoLureConfig configService = sling.getService(PokeGoLureConfig.class);
@@ -22,14 +24,20 @@ public final class HelperFunction {
         }
         return null;
     }
-    
+
     /**
      * Checks whether a user is logged into the Pokemon API.
+     * It will attempt to refresh the session if the API is present.
      * @param sling
-     * @return 
+     * @return
      */
     public static Boolean isLoggedIn(SlingScriptHelper sling) {
         PokeGoApiService service = PokeGoApiServiceImpl.getInstance();
         return service.getApi() != null;
     }
+
+    public static String getGoogleLoginUrl() {
+        return GoogleUserCredentialProvider.LOGIN_URL;
+    }
+
 }
