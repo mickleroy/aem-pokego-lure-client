@@ -15,6 +15,13 @@
             <a class="coral-Button coral-Button--large coral-Button--primary" id="google-auth" target="_blank" href="${pokego:getGoogleLoginUrl()}">Get Authorisation Token</a>
         </div>
         <div>
+            <div id="google-error" class="coral3-Alert coral3-Alert--error coral3-Alert--large">
+                <strong class="coral3-Alert-header">
+                    <i class="coral-Alert-typeIcon coral-Icon coral-Icon--sizeS coral-Icon--alert"></i>
+                    Authentication Failed
+                </strong>
+                <div class="coral3-Alert-content">Please check the token is correct, then try again.</div>
+            </div>
             <form class="coral-Form coral-Form--vertical" id="google-auth--form">
                 <section class="coral-Form-fieldset">
                     <label class="coral-Form-fieldlabel">Paste your authorisation token here</label>
@@ -25,6 +32,13 @@
         </div>
         <div>
             <p>Or login with your Pokemon Trainer Club account.</p>
+            <div id="ptc-error" class="coral3-Alert coral3-Alert--error coral3-Alert--large">
+                <strong class="coral3-Alert-header">
+                    <i class="coral-Alert-typeIcon coral-Icon coral-Icon--sizeS coral-Icon--alert"></i>
+                    Login Failed
+                </strong>
+                <div class="coral3-Alert-content">Please check your username and password, then try again.</div>
+            </div>
             <form class="coral-Form coral-Form--vertical">
                 <section class="coral-Form-fieldset">
 
@@ -35,11 +49,9 @@
                 </section>
             </form>
         </div>
-        <div id="login-alert" class="coral-Alert coral-Alert--error"></div>
         <small>Disclaimer: This software should be used at your own risk as it may be against the Terms of Use.</small>
     </div>
 </div>
 
-<cq:includeClientLib css="apps.pokegolure.login"/>
-<cq:includeClientLib js="apps.pokegolure.login"/>
+<cq:includeClientLib categories="apps.pokegolure.login"/>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
